@@ -42,6 +42,11 @@ void loop() // put your main code here, to run repeatedly:
   {
       int FlameOn = 0;
   }
-  
+  if(FlameOn == 1) && (PresentIn == 1)
+  {
+    //Insert here to run motor, and turn on all lights
+    //spotlight?????
+    //obstacle avoidence???????
+  }
   
 }
