@@ -1,18 +1,31 @@
 /*Animatronic Master Code
   Holiday Themed PreCode Testing
 */
+#include <SoftwareSerial.h>
 #include <LiquidCrystal.h>
 #include <Servo.h>
 #include <IRremoteInt.h>
 #include <IRremote.h>
-int const FlameSensorPin = A0; //Declare Flame Sensor Pin
-int const MotorPin = A0; //Declare pin slot for motor
-int const Spotlight = 0; //Declare pin for LED on front, act as a spotlight
-int const IRremotePin = A0; //Declare pin for Infared Remote receiver
-int const FlameThreshold = 100; //Declare threshold for flame considered on
-//int IRValue = 0; //Need to learn how to use this!!!! Remote and Receiver
-//bool TrainRun = false; //use on/off button on remote to toggle true and false
-int FlameValue = 0; //Declare value of flame, later used to determine on or off
+//Flame Sensor Setup
+  int const FlameSensorPin = A0; //Declare Flame Sensor Pin
+  int const FlameThreshold = 100; //Declare threshold for flame considered on
+  int FlameValue = 0; //Declare value of flame, later used to determine on or off
+//Motor Setup
+  int const MotorPin = A0; //Declare pin slot for motor
+//Front Spotlight Setup
+  int const Spotlight = 0; //Declare pin for LED on front, act as a spotlight
+//Remote Control Setup
+  int const IRremotePin = A0; //Declare pin for Infared Remote receiver
+  int IRValue = 0; //Need to learn how to use this!!!! Remote and Receiver
+  bool TrainRun = false; //use on/off button on remote to toggle true and false
+//Servo Setup
+  int const NiceServoPin = A0;
+  int NiceServoPos = 0;
+  int const NaughtyServoPin = A0;
+  int NaughtyServoPos = 0;
+//LCD Setup
+  int const LCDScreenPin = 0;
+
 bool FlameOn = false; //Declare flame on or off
 void setup() // put your setup code here, to run once:
 {
@@ -43,7 +56,7 @@ void loop() // put your main code here, to run repeatedly:
   }
   while (FlameOn == true) //unsure if works because Bool FlameOn changes outside of loop
   {
-    digitalWrite(Spotlight, HIGH)
+    digitalWrite(Spotlight, HIGH);
     while (TrainRun == true)
     {
       switch (IRValue)
@@ -54,24 +67,26 @@ void loop() // put your main code here, to run repeatedly:
         case 2:
           //display nice and run servo 2 to drop colorful present
           break;
+        case 3:
+          bool TrainRun = false; //not sure if i need this, already stated outside
+          break;
         default:
           break;
       }
     }
   }
-//digitalWrite(Spotlight, HIGH); //Turns off spotlight, maybe use spotlight?
-//  analogWrite(MotorPin, 0);
-//  else if (FlameOn == 1 && PresentIn == 1)
-//  {
-//    digitalWrite(LEDPin, HIGH);
-//    digitalWrite(Spotlight, HIGH);
-//    analogWrite(MotorPin, 125);
-//  }
-//  else
-//  {
-//    digitalWrite(Spotlight, LOW); //Turns off spotlight, maybe use spotlight?
-//    analogWrite(MotorPin, 0);
-
-  }
+  //digitalWrite(Spotlight, HIGH); //Turns off spotlight, maybe use spotlight?
+  //  analogWrite(MotorPin, 0);
+  //  else if (FlameOn == 1 && PresentIn == 1)
+  //  {
+  //    digitalWrite(LEDPin, HIGH);
+  //    digitalWrite(Spotlight, HIGH);
+  //    analogWrite(MotorPin, 125);
+  //  }
+  //  else
+  //  {
+  //    digitalWrite(Spotlight, LOW); //Turns off spotlight, maybe use spotlight?
+  //    analogWrite(MotorPin, 0);
+  //  }
 
 }
