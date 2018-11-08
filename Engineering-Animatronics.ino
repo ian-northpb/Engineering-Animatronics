@@ -8,13 +8,16 @@
 int const FlameSensorPin = A0; //Declare Flame Sensor Pin
 int const MotorPin = A0; //Declare pin slot for motor
 int const Spotlight = 0; //Declare pin for LED on front, act as a spotlight
-int const IRremotePin = A0;
+int const IRremotePin = A0; //Declare pin for Infared Remote receiver
 int const FlameThreshold = 100; //Declare threshold for flame considered on
+//int IRValue = 0; //Need to learn how to use this!!!! Remote and Receiver
+//bool TrainRun = false; //use on/off button on remote to toggle true and false
 int FlameValue = 0; //Declare value of flame, later used to determine on or off
 bool FlameOn = false; //Declare flame on or off
 void setup() // put your setup code here, to run once:
 {
   pinMode(FlameSensorPin, INPUT);
+  pinMode(IRremotePin, INPUT);
   pinMode(MotorPin, OUTPUT);
   pinMode(Spotlight, OUTPUT);
 }
@@ -28,27 +31,46 @@ void loop() // put your main code here, to run repeatedly:
 
   else
   {
-    int FlameOn = 0;
+    bool FlameOn = false;
+  }
+  if (IRValue == 1)
+  {
+    bool TrainRun = true;
+  }
+  if (IRValue == 0)
+  {
+    bool TrainRun = false;
   }
   while (FlameOn == true) //unsure if works because Bool FlameOn changes outside of loop
   {
     digitalWrite(Spotlight, HIGH)
-    switch 
-    
+    while (TrainRun == true)
+    {
+      switch (IRValue)
+      {
+        case 1:
+          //display naughty, and run servo 1 to drop black "coal"
+          break;
+        case 2:
+          //display nice and run servo 2 to drop colorful present
+          break;
+        default:
+          break;
+      }
+    }
   }
-digitalWrite(Spotlight, HIGH); //Turns off spotlight, maybe use spotlight?
-  analogWrite(MotorPin, 0);
-  else if (FlameOn == 1 && PresentIn == 1)
-  {
-    digitalWrite(LEDPin, HIGH);
-    digitalWrite(Spotlight, HIGH);
-    analogWrite(MotorPin, 125);
-  }
-  else
-  {
-    digitalWrite(LEDPin, LOW);
-    digitalWrite(Spotlight, LOW); //Turns off spotlight, maybe use spotlight?
-    analogWrite(MotorPin, 0);
+//digitalWrite(Spotlight, HIGH); //Turns off spotlight, maybe use spotlight?
+//  analogWrite(MotorPin, 0);
+//  else if (FlameOn == 1 && PresentIn == 1)
+//  {
+//    digitalWrite(LEDPin, HIGH);
+//    digitalWrite(Spotlight, HIGH);
+//    analogWrite(MotorPin, 125);
+//  }
+//  else
+//  {
+//    digitalWrite(Spotlight, LOW); //Turns off spotlight, maybe use spotlight?
+//    analogWrite(MotorPin, 0);
 
   }
 
