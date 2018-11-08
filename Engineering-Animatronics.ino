@@ -3,8 +3,7 @@
 */
 int const FlameSensorPin = A0; //set pin //Declare Flame Sensor Pin
 //int const (Sensor)SensorPin = 0; //set pin //Present sensor (pressure, proximity, light?)
-int const LEDFrontPin = 0; //set pin //Declare pin slot for front LED
-int const LEDBackPin = 0; //set pin //Declare pin slot for back car LED
+int const LEDPin = 0; //set pin //Declare pin slot for LED
 int const MotorPin = A0; //set pin //Declare pin slot for motor
 int const Spotlight = 0; //set pin //
 int const FlameThreshold = 100; //figure out good threshold //Declare threshold for flame considered on
@@ -18,8 +17,7 @@ void setup() // put your setup code here, to run once:
 {
   pinMode(FlameSensorPin, INPUT);
   //pinMode(/*Present Sensor Pin*/, INPUT);
-  pinMode(LEDFrontPin, OUTPUT);
-  pinMode(LEDBackPin, OUTPUT);
+  pinMode(LEDPin, OUTPUT);
   pinMode(MotorPin, OUTPUT);
   //pinMode(Spotlight, OUTPUT);
 }
@@ -44,31 +42,27 @@ void loop() // put your main code here, to run repeatedly:
   {
     int FlameOn = 0;
   }
-  if (FlameOn == 1 && PresentIn == 0)
+  if ((FlameOn == 1 && PresentIn == 0) || (FlameOn == 0 && PresentIn == 1))
   {
-    digitalWrite(LEDFrontPin, HIGH);
-    digitalWrite(LEDBackPin, LOW);
+    digitalWrite(LEDPin, HIGH);
     digitalWrite(Spotlight, LOW); //Turns off spotlight, maybe use spotlight?
     analogWrite(MotorPin, 0);
   }
-  else if (FlameOn == 0 && PresentIn == 1)
-  {
-    digitalWrite(LEDFrontPin, LOW);
-    digitalWrite(LEDBackPin, HIGH);
-    digitalWrite(Spotlight, LOW); //Turns off spotlight, maybe use spotlight?
-    analogWrite(MotorPin, 0);
-  }
+//  else if (FlameOn == 0 && PresentIn == 1)
+//  {
+//    digitalWrite(LEDPin, LOW);
+//    digitalWrite(Spotlight, LOW); //Turns off spotlight, maybe use spotlight?
+//    analogWrite(MotorPin, 0);
+//  }
   else if (FlameOn == 1 && PresentIn == 1)
   {
-    digitalWrite(LEDFrontPin, HIGH);
-    digitalWrite(LEDBackPin, HIGH);
+    digitalWrite(LEDPin, HIGH);
     digitalWrite(Spotlight, HIGH);
     analogWrite(MotorPin, 125);
   }
   else
   {
-    digitalWrite(LEDFrontPin, LOW);
-    digitalWrite(LEDBackPin, LOW);
+    digitalWrite(LEDPin, LOW);
     digitalWrite(Spotlight, LOW); //Turns off spotlight, maybe use spotlight?
     analogWrite(MotorPin, 0);
     
