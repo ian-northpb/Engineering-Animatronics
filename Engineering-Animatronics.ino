@@ -21,9 +21,9 @@ void setup() // put your setup code here, to run once:
   pinMode(MotorPin, OUTPUT);
   //pinMode(Spotlight, OUTPUT);
 }
-
 void loop() // put your main code here, to run repeatedly:
 {
+                /******Present with Analog Sensor*******/
   //  int PresentValue = analogRead(/*presentSensor*/);
   //  if(PresentValue > PresentThreshold)
   //  {
@@ -33,11 +33,14 @@ void loop() // put your main code here, to run repeatedly:
   //  {
   //    int PresentIn = 0;
   //  }
+            /******Present with Digital Sensor******/
+  //  int PresentOn = digitalRead(/*PresentSensor*/);
   int FlameValue = analogRead(FlameSensorPin);
   if (FlameSensorPin > FlameThreshold)
   {
     int FlameOn = 1;
   }
+
   else
   {
     int FlameOn = 0;
