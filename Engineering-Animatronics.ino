@@ -1,6 +1,10 @@
 /*Animatronic Master Code
   Holiday Themed PreCode Testing
 */
+#include <LiquidCrystal.h>
+#include <Servo.h>
+#include <IRremoteInt.h>
+#include <IRremote.h>
 int const FlameSensorPin = A0; //set pin //Declare Flame Sensor Pin
 //int const (Sensor)SensorPin = 0; //set pin //Present sensor (pressure, proximity, light?)
 int const LEDPin = 0; //set pin //Declare pin slot for LED
@@ -12,7 +16,6 @@ int FlameOn = 0; //Declare flame on or off
 //Only use if present sensor is analog int const PresentThreshold = 100; //Declare threshold for presents in car
 //Only use if present sensor is analog int PresentValue = 0; //Declare value of presents in
 int PresentIn = 0; //Declare presents in or out
-
 void setup() // put your setup code here, to run once:
 {
   pinMode(FlameSensorPin, INPUT);
