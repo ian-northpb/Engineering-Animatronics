@@ -1,77 +1,92 @@
 /*Animatronic Master Code
   Holiday Themed PreCode Testing
 */
-int const FlameSensorPin = A0; //set pin //Declare Flame Sensor Pin
-//int const (Sensor)SensorPin = 0; //set pin //Present sensor (pressure, proximity, light?)
-int const LEDFrontPin = 0; //set pin //Declare pin slot for front LED
-int const LEDBackPin = 0; //set pin //Declare pin slot for back car LED
-int const MotorPin = A0; //set pin //Declare pin slot for motor
-int const Spotlight = 0; //set pin //
-int const FlameThreshold = 100; //figure out good threshold //Declare threshold for flame considered on
-int FlameValue = 0; //Declare value of flame, later used to determine on or off
-int FlameOn = 0; //Declare flame on or off
-//Only use if present sensor is analog int const PresentThreshold = 100; //Declare threshold for presents in car
-//Only use if present sensor is analog int PresentValue = 0; //Declare value of presents in
-int PresentIn = 0; //Declare presents in or out
+#include <SoftwareSerial.h>
+#include <LiquidCrystal.h>
+#include <Servo.h>
+#include <IRremoteInt.h>
+#include <IRremote.h>
+//Flame Sensor Setup
+  int const FlameSensorPin = A0; //Declare Flame Sensor Pin
+  int const FlameThreshold = 100; //Declare threshold for flame considered on
+  int FlameValue = 0; //Declare value of flame, later used to determine on or off
+//Motor Setup
+  int const MotorPin = A0; //Declare pin slot for motor
+//Front Spotlight Setup
+  int const Spotlight = 0; //Declare pin for LED on front, act as a spotlight
+//Remote Control Setup
+  int const IRremotePin = A0; //Declare pin for Infared Remote receiver
+  int IRValue = 0; //Need to learn how to use this!!!! Remote and Receiver
+  bool TrainRun = false; //use on/off button on remote to toggle true and false
+//Servo Setup
+  int const NiceServoPin = A0;
+  int NiceServoPos = 0;
+  int const NaughtyServoPin = A0;
+  int NaughtyServoPos = 0;
+//LCD Setup
+  int const LCDScreenPin = 0;
 
+bool FlameOn = false; //Declare flame on or off
 void setup() // put your setup code here, to run once:
 {
   pinMode(FlameSensorPin, INPUT);
-  //pinMode(/*Present Sensor Pin*/, INPUT);
-  pinMode(LEDFrontPin, OUTPUT);
-  pinMode(LEDBackPin, OUTPUT);
+  pinMode(IRremotePin, INPUT);
   pinMode(MotorPin, OUTPUT);
-  //pinMode(Spotlight, OUTPUT);
+  pinMode(Spotlight, OUTPUT);
 }
-
 void loop() // put your main code here, to run repeatedly:
 {
-  //  int PresentValue = analogRead(/*presentSensor*/);
-  //  if(PresentValue > PresentThreshold)
+  bool FlameValue = analogRead(FlameSensorPin);
+  if (FlameValue > FlameThreshold)
+  {
+    bool FlameOn = true;
+  }
+
+  else
+  {
+    bool FlameOn = false;
+  }
+  if (IRValue == 1)
+  {
+    bool TrainRun = true;
+  }
+  if (IRValue == 0)
+  {
+    bool TrainRun = false;
+  }
+  while (FlameOn == true) //unsure if works because Bool FlameOn changes outside of loop
+  {
+    digitalWrite(Spotlight, HIGH);
+    while (TrainRun == true)
+    {
+      switch (IRValue)
+      {
+        case 1:
+          //display naughty, and run servo 1 to drop black "coal"
+          break;
+        case 2:
+          //display nice and run servo 2 to drop colorful present
+          break;
+        case 3:
+          bool TrainRun = false; //not sure if i need this, already stated outside
+          break;
+        default:
+          break;
+      }
+    }
+  }
+  //digitalWrite(Spotlight, HIGH); //Turns off spotlight, maybe use spotlight?
+  //  analogWrite(MotorPin, 0);
+  //  else if (FlameOn == 1 && PresentIn == 1)
   //  {
-  //    int PresentIn = 1;
+  //    digitalWrite(LEDPin, HIGH);
+  //    digitalWrite(Spotlight, HIGH);
+  //    analogWrite(MotorPin, 125);
   //  }
   //  else
   //  {
-  //    int PresentIn = 0;
+  //    digitalWrite(Spotlight, LOW); //Turns off spotlight, maybe use spotlight?
+  //    analogWrite(MotorPin, 0);
   //  }
-  int FlameValue = analogRead(FlameSensorPin);
-  if (FlameSensorPin > FlameThreshold)
-  {
-    int FlameOn = 1;
-  }
-  else
-  {
-    int FlameOn = 0;
-  }
-  if (FlameOn == 1 && PresentIn == 0)
-  {
-    digitalWrite(LEDFrontPin, HIGH);
-    digitalWrite(LEDBackPin, LOW);
-    digitalWrite(Spotlight, LOW); //Turns off spotlight, maybe use spotlight?
-    analogWrite(MotorPin, 0);
-  }
-  else if (FlameOn == 0 && PresentIn == 1)
-  {
-    digitalWrite(LEDFrontPin, LOW);
-    digitalWrite(LEDBackPin, HIGH);
-    digitalWrite(Spotlight, LOW); //Turns off spotlight, maybe use spotlight?
-    analogWrite(MotorPin, 0);
-  }
-  else if (FlameOn == 1 && PresentIn == 1)
-  {
-    digitalWrite(LEDFrontPin, HIGH);
-    digitalWrite(LEDBackPin, HIGH);
-    digitalWrite(Spotlight, HIGH);
-    analogWrite(MotorPin, 125);
-  }
-  else
-  {
-    digitalWrite(LEDFrontPin, LOW);
-    digitalWrite(LEDBackPin, LOW);
-    digitalWrite(Spotlight, LOW); //Turns off spotlight, maybe use spotlight?
-    analogWrite(MotorPin, 0);
-    
-  }
 
 }
