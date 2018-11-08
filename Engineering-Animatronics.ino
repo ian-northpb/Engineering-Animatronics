@@ -71,6 +71,7 @@ void loop() // put your main code here, to run repeatedly:
     digitalWrite(LEDBackPin, LOW);
     digitalWrite(Spotlight, LOW); //Turns off spotlight, maybe use spotlight?
     analogWrite(MotorPin, 0);
+    
   }
 
 }
