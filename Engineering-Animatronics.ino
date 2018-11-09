@@ -1,11 +1,10 @@
-/*Animatronic Master Code
-  Holiday Themed PreCode Testing
-*/
-#include <SoftwareSerial.h>
-#include <LiquidCrystal.h>
-#include <Servo.h>
-#include <IRremoteInt.h>
-#include <IRremote.h>
+/*Animatronic Master Code Holiday Themed PreCode Testing*/
+//Included Libraries
+  #include <SoftwareSerial.h> //Library to use serial monitor
+  #include <LiquidCrystal.h> //Library to use LCD Display
+  #include <Servo.h> //Library to use and control Servos
+  #include <IRremoteInt.h> //Library to control Infared Remote Control
+  #include <IRremote.h> //Library used to control Infared Remote Control cont.
 //Flame Sensor Variable Setup
   int const FlameSensorPin = A0; //Declare Flame Sensor Pin
   int const FlameThreshold = 100; //Declare threshold for flame considered on
@@ -34,49 +33,49 @@
 void setup() // put your setup code here, to run once:
 {
 //Flame Sensor Setup
-  pinMode(FlameSensorPin, INPUT);
+  pinMode(FlameSensorPin, INPUT); //Assigns pin for the Flame Sensor
 //Remote Control Setup
-  pinMode(IRremotePin, INPUT);
+  pinMode(IRremotePin, INPUT); //Assigns pin for the Infared Remote receiver
 //Motor Setup
-  pinMode(MotorPin, OUTPUT);
+  pinMode(MotorPin, OUTPUT); //Assigns Pin for the drive motor
 //Front Spotlight Setup
-  pinMode(Spotlight, OUTPUT);
+  pinMode(Spotlight, OUTPUT); //Assigns pin for the LED Front light
 //LCD Screen Setup
   
 //Nice Servo Setup
-  NiceServo.attach(NiceServoPin);
-  NiceServo.write(NiceServoStartPos);
+  NiceServo.attach(NiceServoPin); //Assigns pin for the "Nice" Servo
+  NiceServo.write(NiceServoStartPos); //Sets servo to starting position
 //Naughty Servo Setup
-  NaughtyServo.attach(NaughtyServoPin);
-  NaughtyServo.write(NaughtyServoStartPos);
+  NaughtyServo.attach(NaughtyServoPin); //Assigns pin for the "Naughty" Servo
+  NaughtyServo.write(NaughtyServoStartPos); //Sets servo to starting position
 
 }
 void loop() // put your main code here, to run repeatedly:
 {
-  bool FlameValue = analogRead(FlameSensorPin);
-  if (FlameValue > FlameThreshold)
+  int FlameValue = analogRead(FlameSensorPin); //Equates variable "FlameValue" to the data read by flame sensor
+  if (FlameValue > FlameThreshold) //Do if the flame value is greater than its threshold
   {
-    bool FlameOn = true;
+    bool FlameOn = true; //Write FlameOn as true
   }
 
-  else
+  else //Do if the flame value is less than its threshold
   {
-    bool FlameOn = false;
+    bool FlameOn = false; //Write FlameOn as false
   }
-  if (IRValue == 1)
+  if (IRValue == 1/***************Need to configure the remote data******************/) //Do if on button is pressed
   {
-    bool TrainRun = true;
+    bool TrainRun = true; //Write TrainRun as true
   }
-  if (IRValue == 0)
+  if (IRValue == 0/***************Need to configure the remote data******************/) //Do if off button is pressed
   {
-    bool TrainRun = false;
+    bool TrainRun = false; //Write TrainRun as false
   }
-  while (FlameOn == true) //unsure if works because Bool FlameOn changes outside of loop
+  while (FlameOn == true) //unsure if works because Bool FlameOn changes outside of loop //Do while the flame is lit
   {
-    digitalWrite(Spotlight, HIGH);
-    while (TrainRun == true)
+    digitalWrite(Spotlight, HIGH); //Turn on the spotlight while flame is lit
+    while (TrainRun == true) //Do while train was turned "on" and the flame is lit
     {
-      switch (IRValue)
+      switch (IRValue) //Use the remote to run different codes
       {
         case 1:
           //display naughty, and run servo 1 to drop black "coal"
