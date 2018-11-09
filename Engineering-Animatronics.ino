@@ -12,8 +12,9 @@
   #include <SoftwareSerial.h> //Library to use serial monitor
   #include <LiquidCrystal.h> //Library to use LCD Display
   #include <Servo.h> //Library to use and control Servos
-  #include <IRremoteInt.h> //Library to control Infared Remote Control
-  #include <IRremote.h> //Library used to control Infared Remote Control cont.
+  #include <RobotIRremoteInt.h>
+  #include <RobotIRremote.h>
+  #include <RobotIRremoteTools.h>
 //Flame Sensor Variable Setup
   int const FlameSensorPin = A0; //Declare Flame Sensor Pin
   int const FlameThreshold = 100; //Declare threshold for flame considered on
@@ -21,10 +22,10 @@
   bool FlameOn = false; //Declare flame on or off
 //Motor Variable Setup
   int const MotorPin = A1; //Declare pin slot for motor
-//Front Spotlight Variable Setup
-  int const Spotlight = 1; //Declare pin for LED on front, act as a spotlight
+//Spotlight Variable Setup
+  int const Spotlight = 2; //Declare pin for LED on front, act as a spotlight
 //Remote Control Variable Setup
-  int const IRremotePin = A2; //Declare pin for Infared Remote receiver
+  int const IRremotePin = 11; //Declare pin for Infared Remote receiver
   int IRValue = 0; //Need to learn how to use this!!!! Remote and Receiver
   bool TrainRun = false; //use on/off button on remote to toggle true and false
 //Nice Servo Variable Setup
