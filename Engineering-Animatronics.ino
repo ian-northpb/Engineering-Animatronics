@@ -1,4 +1,5 @@
 /*Animatronic Master Code Holiday Themed PreCode Testing*/
+
 //Included Libraries
   #include <SoftwareSerial.h> //Library to use serial monitor
   #include <LiquidCrystal.h> //Library to use LCD Display
@@ -62,13 +63,9 @@ void loop() // put your main code here, to run repeatedly:
   {
     bool FlameOn = false; //Write FlameOn as false
   }
-  if (IRValue == 1/***************Need to configure the remote data******************/) //Do if on button is pressed
+  if (IRValue == 0/******POWER BUTTON*********Need to configure the remote data******************/) //Do if off button is pressed
   {
-    bool TrainRun = true; //Write TrainRun as true
-  }
-  if (IRValue == 0/***************Need to configure the remote data******************/) //Do if off button is pressed
-  {
-    bool TrainRun = false; //Write TrainRun as false
+    bool TrainRun = !bool; //Toggle train as on/off
   }
   while (FlameOn == true) //unsure if works because Bool FlameOn changes outside of loop //Do while the flame is lit
   {
@@ -77,14 +74,14 @@ void loop() // put your main code here, to run repeatedly:
     {
       switch (IRValue) //Use the remote to run different codes
       {
-        case 1:
-          //display naughty, and run servo 1 to drop black "coal"
-          break;
-        case 2:
-          //display nice and run servo 2 to drop colorful present
-          break;
-        default:
-          break;
+        case 1: //Press __ button to run scenario
+//fill out action          //display naughty on LCD, and run servo naughty to drop black "coal"
+          break; //ends case statement if case 1 is run
+        case 2: //Press __ button to run scenario
+//fill out action          //display nice on LCD, and run servo nice to drop colorful present
+          break; //ends case statement if case 2 is run
+        default: //default action if neither case 1 nor case 2 happens
+          break; //ends code if default code runs
       }
     }
   }
