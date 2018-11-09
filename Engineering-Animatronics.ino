@@ -6,33 +6,50 @@
 #include <Servo.h>
 #include <IRremoteInt.h>
 #include <IRremote.h>
-//Flame Sensor Setup
+//Flame Sensor Variable Setup
   int const FlameSensorPin = A0; //Declare Flame Sensor Pin
   int const FlameThreshold = 100; //Declare threshold for flame considered on
   int FlameValue = 0; //Declare value of flame, later used to determine on or off
-//Motor Setup
-  int const MotorPin = A0; //Declare pin slot for motor
-//Front Spotlight Setup
-  int const Spotlight = 0; //Declare pin for LED on front, act as a spotlight
-//Remote Control Setup
-  int const IRremotePin = A0; //Declare pin for Infared Remote receiver
+  bool FlameOn = false; //Declare flame on or off
+//Motor Variable Setup
+  int const MotorPin = A1; //Declare pin slot for motor
+//Front Spotlight Variable Setup
+  int const Spotlight = 1; //Declare pin for LED on front, act as a spotlight
+//Remote Control Variable Setup
+  int const IRremotePin = A2; //Declare pin for Infared Remote receiver
   int IRValue = 0; //Need to learn how to use this!!!! Remote and Receiver
   bool TrainRun = false; //use on/off button on remote to toggle true and false
-//Servo Setup
-  int const NiceServoPin = A0;
-  int NiceServoPos = 0;
-  int const NaughtyServoPin = A0;
-  int NaughtyServoPos = 0;
-//LCD Setup
-  int const LCDScreenPin = 0;
+//Nice Servo Variable Setup
+  Servo NiceServo;
+  int const NiceServoPin = 9; //Declare pin of servo controlling nice presents
+  int NiceServoStartPos = 0; //Starting position of the servo
+  int NiceServoPourPos = 90; //Position to dump present
+//Naughty Servo Variable Setup
+  Servo NaughtyServo;
+  int const NaughtyServoPin = 10; //Declare pin of servo controlling coal
+  int NaughtyServoStartPos = 0; //Starting position of the servo
+  int NaughtyServoPourPos = 90; //Position to dump coal
+//LCD Variable Setup
 
-bool FlameOn = false; //Declare flame on or off
 void setup() // put your setup code here, to run once:
 {
+//Flame Sensor Setup
   pinMode(FlameSensorPin, INPUT);
+//Remote Control Setup
   pinMode(IRremotePin, INPUT);
+//Motor Setup
   pinMode(MotorPin, OUTPUT);
+//Front Spotlight Setup
   pinMode(Spotlight, OUTPUT);
+//LCD Screen Setup
+  
+//Nice Servo Setup
+  NiceServo.attach(NiceServoPin);
+  NiceServo.write(NiceServoStartPos);
+//Naughty Servo Setup
+  NaughtyServo.attach(NaughtyServoPin);
+  NaughtyServo.write(NaughtyServoStartPos);
+
 }
 void loop() // put your main code here, to run repeatedly:
 {
@@ -67,26 +84,9 @@ void loop() // put your main code here, to run repeatedly:
         case 2:
           //display nice and run servo 2 to drop colorful present
           break;
-        case 3:
-          bool TrainRun = false; //not sure if i need this, already stated outside
-          break;
         default:
           break;
       }
     }
   }
-  //digitalWrite(Spotlight, HIGH); //Turns off spotlight, maybe use spotlight?
-  //  analogWrite(MotorPin, 0);
-  //  else if (FlameOn == 1 && PresentIn == 1)
-  //  {
-  //    digitalWrite(LEDPin, HIGH);
-  //    digitalWrite(Spotlight, HIGH);
-  //    analogWrite(MotorPin, 125);
-  //  }
-  //  else
-  //  {
-  //    digitalWrite(Spotlight, LOW); //Turns off spotlight, maybe use spotlight?
-  //    analogWrite(MotorPin, 0);
-  //  }
-
 }
