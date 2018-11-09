@@ -73,7 +73,7 @@ void loop() // put your main code here, to run repeatedly:
   }
   if (IRValue == 0/******POWER BUTTON*********Need to configure the remote data******************/) //Do if off button is pressed
   {
-    bool TrainRun = !bool; //Toggle train as on/off
+    bool TrainRun = !TrainRun; //Toggle train as on/off
   }
   while (FlameOn == true) //unsure if works because Bool FlameOn changes outside of loop //Do while the flame is lit
   {
