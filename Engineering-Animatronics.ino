@@ -38,6 +38,7 @@
   int NaughtyServoStartPos = 0; //Starting position of the servo
   int NaughtyServoPourPos = 90; //Position to dump coal
 //LCD Variable Setup
+  //Werid Setup, figure it out
 
 void setup() // put your setup code here, to run once:
 {
@@ -80,12 +81,12 @@ void loop() // put your main code here, to run repeatedly:
     digitalWrite(Spotlight, HIGH); //Turn on the spotlight while flame is lit
     while (TrainRun == true) //Do while train was turned "on" and the flame is lit
     {
-      switch (IRValue) //Use the remote to run different codes
+      switch (IRValue/*not sure if we need to convert variable*/) //Use the remote to run different codes
       {
-        case 1: //Press __ button to run scenario
+        case 1/*configure to a button*/: //Press __ button to run scenario
 //fill out action          //display naughty on LCD, and run servo naughty to drop black "coal"
           break; //ends case statement if case 1 is run
-        case 2: //Press __ button to run scenario
+        case 2/*configure to a button*/: //Press __ button to run scenario
 //fill out action          //display nice on LCD, and run servo nice to drop colorful present
           break; //ends case statement if case 2 is run
         default: //default action if neither case 1 nor case 2 happens
