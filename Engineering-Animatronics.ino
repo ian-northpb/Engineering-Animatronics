@@ -1,5 +1,13 @@
 /*Animatronic Master Code Holiday Themed PreCode Testing*/
 
+
+/*To Do List
+ * Make LCD Say Merry Christmas and Ho Ho Ho while not doign anythign
+ * 
+ * Fill out case statement, run servo, and display naughty/nice
+ * 
+ * figure out how to use Infared Remote and sensor
+ */
 //Included Libraries
   #include <SoftwareSerial.h> //Library to use serial monitor
   #include <LiquidCrystal.h> //Library to use LCD Display
