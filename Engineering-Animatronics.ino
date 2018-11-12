@@ -1,6 +1,5 @@
 /*Animatronic Master Code Holiday Themed PreCode Testing*/
 
-
 /*To Do List
  * Make LCD Say Merry Christmas and Ho Ho Ho while not doign anythign
  * 
@@ -12,9 +11,7 @@
   #include <SoftwareSerial.h> //Library to use serial monitor
   #include <LiquidCrystal.h> //Library to use LCD Display
   #include <Servo.h> //Library to use and control Servos
-  #include <RobotIRremoteInt.h>
-  #include <RobotIRremote.h>
-  #include <RobotIRremoteTools.h>
+  #include <IRremote.h> //Library to use and control infrared
 //Flame Sensor Variable Setup
   int const FlameSensorPin = A0; //Declare Flame Sensor Pin
   int const FlameThreshold = 100; //Declare threshold for flame considered on
@@ -26,8 +23,13 @@
   int const Spotlight = 2; //Declare pin for LED on front, act as a spotlight
 //Remote Control Variable Setup
   int const IRremotePin = 11; //Declare pin for Infared Remote receiver
-  int IRValue = 0; //Need to learn how to use this!!!! Remote and Receiver
+  long int IRValue = 0x000000; //Need to learn how to use this!!!! Remote and Receiver
   bool TrainRun = false; //use on/off button on remote to toggle true and false
+  long int const PowerButtonHex = 0xFFFFFF; //Hex Code for power button, button labled power
+  long int const NiceButtonHex = 0xFFFAFA; //Hex Code for nice button, button labeled
+  long int const NaughtyButtonHex = 0xF0FFF0; //Hex Code for naughty button, button labeled
+  IRrecv irrecv(IRremotePin);
+  decode_results results;
 //Nice Servo Variable Setup
   Servo NiceServo;
   int const NiceServoPin = 9; //Declare pin of servo controlling nice presents
@@ -43,11 +45,13 @@
 
 void setup() // put your setup code here, to run once:
 {
+//Serial Setup
+  Serial.begin(9600);
 //Flame Sensor Setup
   pinMode(FlameSensorPin, INPUT); //Assigns pin for the Flame Sensor
 //Remote Control Setup
-  pinMode(IRremotePin, INPUT); //Assigns pin for the Infared Remote receiver
-//Motor Setup
+  irrecv.enableIRIn();
+  //Motor Setup
   pinMode(MotorPin, OUTPUT); //Assigns Pin for the drive motor
 //Front Spotlight Setup
   pinMode(Spotlight, OUTPUT); //Assigns pin for the LED Front light
@@ -64,30 +68,32 @@ void setup() // put your setup code here, to run once:
 void loop() // put your main code here, to run repeatedly:
 {
   int FlameValue = analogRead(FlameSensorPin); //Equates variable "FlameValue" to the data read by flame sensor
+  long int IRValue = irrecv.decode(&results);
+//Turn on flame if higher than threshold
   if (FlameValue > FlameThreshold) //Do if the flame value is greater than its threshold
   {
     bool FlameOn = true; //Write FlameOn as true
   }
-
   else //Do if the flame value is less than its threshold
   {
     bool FlameOn = false; //Write FlameOn as false
   }
-  if (IRValue == 0/******POWER BUTTON*********Need to configure the remote data******************/) //Do if off button is pressed
-  {
-    bool TrainRun = !TrainRun; //Toggle train as on/off
-  }
-  while (FlameOn == true) //unsure if works because Bool FlameOn changes outside of loop //Do while the flame is lit
+  
+  while (FlameOn == true) //Runs while the flame is lit
   {
     digitalWrite(Spotlight, HIGH); //Turn on the spotlight while flame is lit
+    if (IRValue == PowerButtonHex) //Do if power button is pressed
+    {
+      bool TrainRun = !TrainRun; //Toggle train as on/off
+    }
     while (TrainRun == true) //Do while train was turned "on" and the flame is lit
     {
-      switch (IRValue/*not sure if we need to convert variable*/) //Use the remote to run different codes
+      switch (IRValue) //Use the remote to run different codes
       {
-        case 1/*configure to a button*/: //Press __ button to run scenario
+        case NaughtyButtonHex: //Press __ button to run scenario
 //fill out action          //display naughty on LCD, and run servo naughty to drop black "coal"
           break; //ends case statement if case 1 is run
-        case 2/*configure to a button*/: //Press __ button to run scenario
+        case NiceButtonHex: //Press __ button to run scenario
 //fill out action          //display nice on LCD, and run servo nice to drop colorful present
           break; //ends case statement if case 2 is run
         default: //default action if neither case 1 nor case 2 happens
