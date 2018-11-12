@@ -88,16 +88,19 @@ void loop() // put your main code here, to run repeatedly:
     }
     while (TrainRun == true) //Do while train was turned "on" and the flame is lit
     {
-      switch (IRValue) //Use the remote to run different codes
+      if(irrecv.decode(&results))
       {
-        case NaughtyButtonHex: //Press __ button to run scenario
+        switch (IRValue) //Use the remote to run different codes
+        {
+         case NaughtyButtonHex: //Press __ button to run scenario
 //fill out action          //display naughty on LCD, and run servo naughty to drop black "coal"
-          break; //ends case statement if case 1 is run
-        case NiceButtonHex: //Press __ button to run scenario
+            break; //ends case statement if case 1 is run
+          case NiceButtonHex: //Press __ button to run scenario
 //fill out action          //display nice on LCD, and run servo nice to drop colorful present
-          break; //ends case statement if case 2 is run
-        default: //default action if neither case 1 nor case 2 happens
-          break; //ends code if default code runs
+            break; //ends case statement if case 2 is run
+         default: //default action if neither case 1 nor case 2 happens
+            break; //ends code if default code runs
+        }
       }
     }
   }
