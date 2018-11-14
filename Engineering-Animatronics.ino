@@ -9,12 +9,12 @@
  */
 //Included Libraries
   #include <SoftwareSerial.h> //Library to use serial monitor
-  #include <LiquidCrystal.h> //Library to use LCD Display
   #include <Servo.h> //Library to use and control Servos
   #include <IRremote.h> //Library to use and control infrared
+  #include <LiquidCrystal_I2C.h>
 //Flame Sensor Variable Setup
   int const FlameSensorPin = A0; //Declare Flame Sensor Pin
-  int const FlameThreshold = 100; //Declare threshold for flame considered on
+  int const FlameThreshold = 400; //Declare threshold for flame considered on
   int FlameValue = 0; //Declare value of flame, later used to determine on or off
   bool FlameOn = false; //Declare flame on or off
 //Motor Variable Setup
@@ -25,7 +25,7 @@
   int const IRremotePin = 11; //Declare pin for Infared Remote receiver
   long int IRValue = 0x000000; //Need to learn how to use this!!!! Remote and Receiver
   bool TrainRun = false; //use on/off button on remote to toggle true and false
-  long int const PowerButtonHex = 0xFFFFFF; //Hex Code for power button, button labled power
+  long int const PowerButtonHex = 0xFD00FF; //Hex Code for power button, button labled power
   long int const NiceButtonHex = 0xFFFAFA; //Hex Code for nice button, button labeled
   long int const NaughtyButtonHex = 0xF0FFF0; //Hex Code for naughty button, button labeled
   IRrecv irrecv(IRremotePin);
@@ -81,19 +81,21 @@ void loop() // put your main code here, to run repeatedly:
   
   while (FlameOn == true) //Runs while the flame is lit
   {
+    //display Merry Christmas
     digitalWrite(Spotlight, HIGH); //Turn on the spotlight while flame is lit
-    if (IRValue == PowerButtonHex) //Do if power button is pressed
+    if (results == PowerButtonHex) //Do if power button is pressed
     {
       bool TrainRun = !TrainRun; //Toggle train as on/off
     }
     while (TrainRun == true) //Do while train was turned "on" and the flame is lit
     {
+      //Display Merry Christmas and HO HO HO, alternating and scrolling
       if(irrecv.decode(&results))
       {
         switch (IRValue) //Use the remote to run different codes
         {
          case NaughtyButtonHex: //Press __ button to run scenario
-//fill out action          //display naughty on LCD, and run servo naughty to drop black "coal"
+//fill out action          //display naughty on LCD, blinking, and run servo naughty to drop black "coal"
             break; //ends case statement if case 1 is run
           case NiceButtonHex: //Press __ button to run scenario
 //fill out action          //display nice on LCD, and run servo nice to drop colorful present
@@ -101,6 +103,7 @@ void loop() // put your main code here, to run repeatedly:
          default: //default action if neither case 1 nor case 2 happens
             break; //ends code if default code runs
         }
+        irrecv.resume();
       }
     }
   }
