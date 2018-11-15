@@ -19,27 +19,27 @@
   bool FlameOn = false; //Declare flame on or off
 //Motor Variable Setup
   int const MotorPin = A1; //Declare pin slot for motor
+  int const TrainRunStop = 0;
+  int const TrainRunSpeed = 100;
 //Spotlight Variable Setup
   int const Spotlight = 2; //Declare pin for LED on front, act as a spotlight
 //Remote Control Variable Setup
   int const IRremotePin = 11; //Declare pin for Infared Remote receiver
-  long int IRValue = 0x000000; //Need to learn how to use this!!!! Remote and Receiver
+  unsigned long IRValue = 0x000000; //Need to learn how to use this!!!! Remote and Receiver
   bool TrainRun = false; //use on/off button on remote to toggle true and false
-  long int const PowerButtonHex = 0xFD00FF; //Hex Code for power button, button labled power
-  long int const NiceButtonHex = 0xFFFAFA; //Hex Code for nice button, button labeled
-  long int const NaughtyButtonHex = 0xF0FFF0; //Hex Code for naughty button, button labeled
+  unsigned long const PowerButtonHex = 0xFD00FF; //Hex Code for power button, button labled power
+  unsigned long const NiceButtonHex = 0xFFFAFA; //Hex Code for nice button, button labeled
+  unsigned long const NaughtyButtonHex = 0xF0FFF0; //Hex Code for naughty button, button labeled
   IRrecv irrecv(IRremotePin);
   decode_results results;
-//Nice Servo Variable Setup
-  Servo NiceServo;
-  int const NiceServoPin = 9; //Declare pin of servo controlling nice presents
-  int NiceServoStartPos = 0; //Starting position of the servo
-  int NiceServoPourPos = 90; //Position to dump present
-//Naughty Servo Variable Setup
-  Servo NaughtyServo;
-  int const NaughtyServoPin = 10; //Declare pin of servo controlling coal
-  int NaughtyServoStartPos = 0; //Starting position of the servo
-  int NaughtyServoPourPos = 90; //Position to dump coal
+//Servo Variable Setup
+  Servo PresentServo;
+  int const PresentServoPin = 9; //Declare pin of servo controlling nice presents
+  int const ServoDefaultPos = 90; //Starting position of the servo
+  int const ServoNicePourPos = 180; //Position to dump present
+  int const ServoNaughtyPourPos = 0; //Position to dump coal
+  int ServoPos = 90;
+
 //LCD Variable Setup
   //Werid Setup, figure it out
 
@@ -51,24 +51,21 @@ void setup() // put your setup code here, to run once:
   pinMode(FlameSensorPin, INPUT); //Assigns pin for the Flame Sensor
 //Remote Control Setup
   irrecv.enableIRIn();
-  //Motor Setup
+//Motor Setup
   pinMode(MotorPin, OUTPUT); //Assigns Pin for the drive motor
 //Front Spotlight Setup
   pinMode(Spotlight, OUTPUT); //Assigns pin for the LED Front light
 //LCD Screen Setup
   
-//Nice Servo Setup
-  NiceServo.attach(NiceServoPin); //Assigns pin for the "Nice" Servo
-  NiceServo.write(NiceServoStartPos); //Sets servo to starting position
-//Naughty Servo Setup
-  NaughtyServo.attach(NaughtyServoPin); //Assigns pin for the "Naughty" Servo
-  NaughtyServo.write(NaughtyServoStartPos); //Sets servo to starting position
+//Servo Setup
+  PresentServo.attach(PresentServoPin); //Assigns pin for the "Nice" Servo
+  PresentServo.write(ServoDefaultPos); //Sets servo to starting position
 
 }
 void loop() // put your main code here, to run repeatedly:
 {
   int FlameValue = analogRead(FlameSensorPin); //Equates variable "FlameValue" to the data read by flame sensor
-  long int IRValue = irrecv.decode(&results);
+  unsigned long IRValue = irrecv.decode(&results);
 //Turn on flame if higher than threshold
   if (FlameValue > FlameThreshold) //Do if the flame value is greater than its threshold
   {
@@ -83,7 +80,8 @@ void loop() // put your main code here, to run repeatedly:
   {
     //display Merry Christmas
     digitalWrite(Spotlight, HIGH); //Turn on the spotlight while flame is lit
-    if (results == PowerButtonHex) //Do if power button is pressed
+    /*if(irrecv.decode(&results)) //Not sure if necessary*************************************************/
+    if (IRValue == PowerButtonHex) //Do if power button is pressed
     {
       bool TrainRun = !TrainRun; //Toggle train as on/off
     }
@@ -94,11 +92,39 @@ void loop() // put your main code here, to run repeatedly:
       {
         switch (IRValue) //Use the remote to run different codes
         {
-         case NaughtyButtonHex: //Press __ button to run scenario
-//fill out action          //display naughty on LCD, blinking, and run servo naughty to drop black "coal"
+          case NaughtyButtonHex: //Press __ button to run scenario
+            analogWrite(MotorPin, TrainRunStop); //fill out action          //display naughty on LCD, blinking, and run servo naughty to drop black "coal"
+            for (; ServoPos <= ServoNaughtyPourPos; ServoPos = ServoPos + 1)
+            {
+              analogWrite(PresentServoPin, ServoPos);
+              delay(20);
+            }
+            delay(1000);
+            for (; ServoPos >= ServoDefaultPos; ServoPos = ServoPos - 1)
+            {
+              analogWrite(PresentServoPin, ServoPos);
+              delay(20);
+            }
+            delay(1000);
+            analogWrite(MotorPin, TrainRunSpeed);
+            //display naughty on LCD, blinking, and run servo naughty to drop black "coal"
             break; //ends case statement if case 1 is run
           case NiceButtonHex: //Press __ button to run scenario
-//fill out action          //display nice on LCD, and run servo nice to drop colorful present
+            analogWrite(MotorPin, TrainRunStop);
+            for (; ServoPos >= ServoNicePourPos; ServoPos = ServoPos - 1)
+            {
+            analogWrite(PresentServoPin, ServoPos);
+            delay(20);
+            }
+            delay(1000);
+            for (; ServoPos <= ServoDefaultPos; ServoPos = ServoPos + 1)
+            {
+            analogWrite(PresentServoPin, ServoPos);
+            delay(20);
+            }
+            delay(1000);
+            analogWrite(MotorPin, TrainRunSpeed);
+            //display nice on LCD, and run servo nice to drop colorful present
             break; //ends case statement if case 2 is run
          default: //default action if neither case 1 nor case 2 happens
             break; //ends code if default code runs
