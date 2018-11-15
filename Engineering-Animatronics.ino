@@ -39,8 +39,8 @@
   int const ServoNicePourPos = 180; //Position to dump present
   int const ServoNaughtyPourPos = 0; //Position to dump coal
   int ServoPos = 90;
-
 //LCD Variable Setup
+  LiquidCrystal_I2C lcd(0x20, 16, 2); // set the LCD address to 0x20(Cooperate with 3 short circuit caps) for a 16 chars and 2 line display
   //Werid Setup, figure it out
 
 void setup() // put your setup code here, to run once:
@@ -56,7 +56,9 @@ void setup() // put your setup code here, to run once:
 //Front Spotlight Setup
   pinMode(Spotlight, OUTPUT); //Assigns pin for the LED Front light
 //LCD Screen Setup
-  
+  lcd.init(); // initialize the lcd
+  lcd.backlight();
+  lcd.home();
 //Servo Setup
   PresentServo.attach(PresentServoPin); //Assigns pin for the "Nice" Servo
   PresentServo.write(ServoDefaultPos); //Sets servo to starting position
@@ -64,6 +66,10 @@ void setup() // put your setup code here, to run once:
 }
 void loop() // put your main code here, to run repeatedly:
 {
+  lcd.setCursor(3, 0);
+  lcd.print("Ho Ho Ho");
+  lcd.setCursor(0, 1);
+  lcd.print("Merry Christmas");
   int FlameValue = analogRead(FlameSensorPin); //Equates variable "FlameValue" to the data read by flame sensor
   unsigned long IRValue = irrecv.decode(&results);
 //Turn on flame if higher than threshold
@@ -88,12 +94,16 @@ void loop() // put your main code here, to run repeatedly:
     while (TrainRun == true) //Do while train was turned "on" and the flame is lit
     {
       //Display Merry Christmas and HO HO HO, alternating and scrolling
-      if(irrecv.decode(&results))
+      if (irrecv.decode(&results))
       {
         switch (IRValue) //Use the remote to run different codes
         {
           case NaughtyButtonHex: //Press __ button to run scenario
             analogWrite(MotorPin, TrainRunStop); //fill out action          //display naughty on LCD, blinking, and run servo naughty to drop black "coal"
+            lcd.setCursor(0, 0);
+            lcd.print("Naughty");
+            lcd.setCursor(1, 9);
+            lcd.print("Naughty");
             for (; ServoPos <= ServoNaughtyPourPos; ServoPos = ServoPos + 1)
             {
               analogWrite(PresentServoPin, ServoPos);
@@ -110,23 +120,27 @@ void loop() // put your main code here, to run repeatedly:
             //display naughty on LCD, blinking, and run servo naughty to drop black "coal"
             break; //ends case statement if case 1 is run
           case NiceButtonHex: //Press __ button to run scenario
+            lcd.setCursor(0, 0);
+            lcd.print("Nice!!");
+            lcd.setCursor(10, 1);
+            lcd.print("Nice!!");
             analogWrite(MotorPin, TrainRunStop);
             for (; ServoPos >= ServoNicePourPos; ServoPos = ServoPos - 1)
             {
-            analogWrite(PresentServoPin, ServoPos);
-            delay(20);
+              analogWrite(PresentServoPin, ServoPos);
+              delay(20);
             }
             delay(1000);
             for (; ServoPos <= ServoDefaultPos; ServoPos = ServoPos + 1)
             {
-            analogWrite(PresentServoPin, ServoPos);
-            delay(20);
+              analogWrite(PresentServoPin, ServoPos);
+              delay(20);
             }
             delay(1000);
             analogWrite(MotorPin, TrainRunSpeed);
             //display nice on LCD, and run servo nice to drop colorful present
             break; //ends case statement if case 2 is run
-         default: //default action if neither case 1 nor case 2 happens
+          default: //default action if neither case 1 nor case 2 happens
             break; //ends code if default code runs
         }
         irrecv.resume();
