@@ -99,11 +99,7 @@ void loop() // put your main code here, to run repeatedly:
         switch (IRValue) //Use the remote to run different codes
         {
           case NaughtyButtonHex: //Press __ button to run scenario
-<<<<<<< ours
             analogWrite(MotorPin, TrainRunStop);
-=======
-            analogWrite(MotorPin, TrainRunStop); //fill out action          //display naughty on LCD, blinking, and run servo naughty to drop black "coal"
->>>>>>> theirs
             lcd.setCursor(0, 0);
             lcd.print("Naughty");
             lcd.setCursor(1, 9);
@@ -121,10 +117,6 @@ void loop() // put your main code here, to run repeatedly:
             }
             delay(1000);
             analogWrite(MotorPin, TrainRunSpeed);
-<<<<<<< ours
-=======
-            //display naughty on LCD, blinking, and run servo naughty to drop black "coal"
->>>>>>> theirs
             break; //ends case statement if case 1 is run
           case NiceButtonHex: //Press __ button to run scenario
             lcd.setCursor(0, 0);
@@ -145,10 +137,6 @@ void loop() // put your main code here, to run repeatedly:
             }
             delay(1000);
             analogWrite(MotorPin, TrainRunSpeed);
-<<<<<<< ours
-=======
-            //display nice on LCD, and run servo nice to drop colorful present
->>>>>>> theirs
             break; //ends case statement if case 2 is run
           default: //default action if neither case 1 nor case 2 happens
             break; //ends code if default code runs
