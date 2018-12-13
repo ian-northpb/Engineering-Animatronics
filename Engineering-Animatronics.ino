@@ -27,9 +27,9 @@
   int const IRremotePin = 11; //Declare pin for Infared Remote receiver
   unsigned long IRValue = 0x000000; //Need to learn how to use this!!!! Remote and Receiver
   bool TrainRun = false; //use on/off button on remote to toggle true and false
-  unsigned long const PowerButtonHex = 0xFD00FF; //Hex Code for power button, button labled power
-  unsigned long const NiceButtonHex = 0xFFFAFA; //Hex Code for nice button, button labeled
-  unsigned long const NaughtyButtonHex = 0xF0FFF0; //Hex Code for naughty button, button labeled
+  unsigned long const PowerButtonHex = /*Not correct yet*/ 0xFD00FF; //Hex Code for power button, button labled power
+  unsigned long const NiceButtonHex = /*Not correct yet*/ 0xFFFAFA; //Hex Code for nice button, button labeled
+  unsigned long const NaughtyButtonHex = /*Not correct yet*/0xF0FFF0; //Hex Code for naughty button, button labeled
   IRrecv irrecv(IRremotePin);
   decode_results results;
 //Servo Variable Setup
@@ -100,10 +100,12 @@ void loop() // put your main code here, to run repeatedly:
         {
           case NaughtyButtonHex: //Press __ button to run scenario
             analogWrite(MotorPin, TrainRunStop);
+            lcd.blink();
             lcd.setCursor(0, 0);
             lcd.print("Naughty");
             lcd.setCursor(1, 9);
             lcd.print("Naughty");
+            lcd.noBlink();
             for (; ServoPos <= ServoNaughtyPourPos; ServoPos = ServoPos + 1)
             {
               analogWrite(PresentServoPin, ServoPos);
