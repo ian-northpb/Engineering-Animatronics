@@ -11,7 +11,7 @@
   #include <SoftwareSerial.h> //Library to use serial monitor
   #include <Servo.h> //Library to use and control Servos
   #include <IRremote.h> //Library to use and control infrared
-  #include <LiquidCrystal_I2C.h>
+  #include <LiquidCrystal_I2C.h> //Library used to setup and control the LCD Screen
 //Flame Sensor Variable Setup
   int const FlameSensorPin = A0; //Declare Flame Sensor Pin
   int const FlameThreshold = 400; //Declare threshold for flame considered on
@@ -100,41 +100,41 @@ void loop() // put your main code here, to run repeatedly:
         {
           case NaughtyButtonHex: //Press __ button to run scenario
             analogWrite(MotorPin, TrainRunStop);
-            lcd.blink();
+            lcd.clear(); //Laura used blink and noblink?
             lcd.setCursor(0, 0);
             lcd.print("Naughty");
             lcd.setCursor(1, 9);
             lcd.print("Naughty");
-            lcd.noBlink();
-            for (; ServoPos <= ServoNaughtyPourPos; ServoPos = ServoPos + 1)
+/*Fix this*/for (; ServoPos <= ServoNaughtyPourPos; ServoPos = ServoPos + 1)
             {
-              analogWrite(PresentServoPin, ServoPos);
+/*Fix this*/  analogWrite(/*Name of servo or servo pin????*/PresentServoPin, ServoPos);
               delay(20);
             }
             delay(1000);
-            for (; ServoPos >= ServoDefaultPos; ServoPos = ServoPos - 1)
+/*Fix this*/for (; ServoPos >= ServoDefaultPos; ServoPos = ServoPos - 1)
             {
-              analogWrite(PresentServoPin, ServoPos);
+/*Fix this*/  analogWrite(/*Name of servo or servo pin????*/PresentServoPin, ServoPos);
               delay(20);
             }
             delay(1000);
             analogWrite(MotorPin, TrainRunSpeed);
             break; //ends case statement if case 1 is run
           case NiceButtonHex: //Press __ button to run scenario
+            lcd.clear(); //clears display and set cursor to 0,0
             lcd.setCursor(0, 0);
-            lcd.print("Nice!!");
-            lcd.setCursor(10, 1);
+            lcd.print("Nice!!  Nice!!");
+            lcd.setCursor(6, 1);
             lcd.print("Nice!!");
             analogWrite(MotorPin, TrainRunStop);
-            for (; ServoPos >= ServoNicePourPos; ServoPos = ServoPos - 1)
+/*Fix this*/for (; ServoPos >= ServoNicePourPos; ServoPos = ServoPos - 1)
             {
-              analogWrite(PresentServoPin, ServoPos);
+/*Fix this*/  analogWrite(/*Name of servo or servo pin????*/PresentServoPin, ServoPos);
               delay(20);
             }
             delay(1000);
-            for (; ServoPos <= ServoDefaultPos; ServoPos = ServoPos + 1)
+/*Fix this*/for (; ServoPos <= ServoDefaultPos; ServoPos = ServoPos + 1)
             {
-              analogWrite(PresentServoPin, ServoPos);
+/*Fix this*/  analogWrite(/*Name of servo or servo pin????*/PresentServoPin, ServoPos);
               delay(20);
             }
             delay(1000);
