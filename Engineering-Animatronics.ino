@@ -105,15 +105,19 @@ void loop() // put your main code here, to run repeatedly:
             lcd.print("Naughty");
             lcd.setCursor(1, 9);
             lcd.print("Naughty");
-/*Fix this*/for (; ServoPos <= ServoNaughtyPourPos; ServoPos = ServoPos + 1)
+/* Fixed? */for (int ServoPos = ServoDefaultPos; ServoPos < ServoNaughtyPourPos; ServoPos = ServoPos + 1)
+///*Fix this*/for (int ServoPos = ServoDefaultPos; ServoPos < ServoNaughtyPourPos; ServoPos = ServoPos + 1)
             {
-/*Fix this*/  analogWrite(/*Name of servo or servo pin????*/PresentServoPin, ServoPos);
-              delay(20);
+/*Fix this*///analogWrite(/*Name of servo or servo pin????*/PresentServoPin, ServoPos);
+              PresentServo.write(ServoPos); //Moves servo to current servo position
+              delay(20); //moves servo at controlled speed
             }
             delay(1000);
-/*Fix this*/for (; ServoPos >= ServoDefaultPos; ServoPos = ServoPos - 1)
+/* Fixed? */for (int ServoPos = ServoNaughtyPourPos; ServoPos > ServoDefaultPos; ServoPos = ServoPos - 1)
+///*Fix this*/for (int ServoPos = ServoNaughtyPourPos; ServoPos > ServoDefaultPos; ServoPos = ServoPos - 1)
             {
-/*Fix this*/  analogWrite(/*Name of servo or servo pin????*/PresentServoPin, ServoPos);
+/*Fix this*///analogWrite(/*Name of servo or servo pin????*/PresentServoPin, ServoPos);
+              PresentServo.write(ServoPos); //Moves servo to current servo position
               delay(20);
             }
             delay(1000);
@@ -126,15 +130,19 @@ void loop() // put your main code here, to run repeatedly:
             lcd.setCursor(6, 1);
             lcd.print("Nice!!");
             analogWrite(MotorPin, TrainRunStop);
-/*Fix this*/for (; ServoPos >= ServoNicePourPos; ServoPos = ServoPos - 1)
+/* Fixed? */for (int ServoPos = ServoDefaultPos; ServoPos > ServoNicePourPos; ServoPos = ServoPos - 1)
+///*Fix this*/for (int ServoPos = ServoDefaultPos; ServoPos > ServoNicePourPos; ServoPos = ServoPos - 1)
             {
-/*Fix this*/  analogWrite(/*Name of servo or servo pin????*/PresentServoPin, ServoPos);
+/*Fix this*///analogWrite(/*Name of servo or servo pin????*/PresentServoPin, ServoPos);
+              PresentServo.write(ServoPos); //Moves servo to current servo position
               delay(20);
             }
             delay(1000);
-/*Fix this*/for (; ServoPos <= ServoDefaultPos; ServoPos = ServoPos + 1)
+/* Fixed? */for (int ServoPos = ServoNicePourPos; ServoPos < ServoDefaultPos; ServoPos = ServoPos + 1)
+///*Fix this*/for (int ServoPos = ServoNicePourPos; ServoPos < ServoDefaultPos; ServoPos = ServoPos + 1)
             {
-/*Fix this*/  analogWrite(/*Name of servo or servo pin????*/PresentServoPin, ServoPos);
+/*Fix this*///analogWrite(/*Name of servo or servo pin????*/PresentServoPin, ServoPos);
+              PresentServo.write(ServoPos); //Moves servo to current servo position
               delay(20);
             }
             delay(1000);
