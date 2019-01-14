@@ -22,7 +22,7 @@
   int const TrainRunStop = 0;
   int const TrainRunSpeed = 100;
 //Spotlight Variable Setup
-  int const Spotlight = 2; //Declare pin for LED on front, act as a spotlight
+  int const SpotlightPin = 2; //Declare pin for LED on front, act as a spotlight
 //Remote Control Variable Setup
   int const IRremotePin = 11; //Declare pin for Infared Remote receiver
   unsigned long IRValue = 0x000000; //Need to learn how to use this!!!! Remote and Receiver
@@ -54,13 +54,13 @@ void setup() // put your setup code here, to run once:
 //Motor Setup
   pinMode(MotorPin, OUTPUT); //Assigns Pin for the drive motor
 //Front Spotlight Setup
-  pinMode(Spotlight, OUTPUT); //Assigns pin for the LED Front light
+  pinMode(SpotlightPin, OUTPUT); //Assigns pin for the LED Front light
 //LCD Screen Setup
   lcd.init(); // initialize the lcd
   lcd.backlight();
   lcd.home();
 //Servo Setup
-  PresentServo.attach(PresentServoPin); //Assigns pin for the "Nice" Servo
+  PresentServo.attach(PresentServoPin); //Assigns pin for the Servo
   PresentServo.write(ServoDefaultPos); //Sets servo to starting position
 
 }
@@ -76,16 +76,17 @@ void loop() // put your main code here, to run repeatedly:
   if (FlameValue > FlameThreshold) //Do if the flame value is greater than its threshold
   {
     bool FlameOn = true; //Write FlameOn as true
+    digitalWrite(SpotlightPin, HIGH); //Turn on the spotlight while flame is lit
   }
   else //Do if the flame value is less than its threshold
   {
     bool FlameOn = false; //Write FlameOn as false
+    digitalWrite(SpotlightPin, LOW); //Turn off the spotlight while flame is lit
   }
   
   while (FlameOn == true) //Runs while the flame is lit
   {
     //display Merry Christmas
-    digitalWrite(Spotlight, HIGH); //Turn on the spotlight while flame is lit
     /*if(irrecv.decode(&results)) //Not sure if necessary*************************************************/
     if (IRValue == PowerButtonHex) //Do if power button is pressed
     {
