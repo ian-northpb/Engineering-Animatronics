@@ -20,7 +20,11 @@
 //Motor Variable Setup
   int const MotorPin = A1; //Declare pin slot for motor
   int const TrainRunStop = 0;
-  int const TrainRunSpeed = 100;
+  int const TrainMaxSpeed = 125;
+  int const TrainMinSpeed = 25;
+  int const TrainFaster = 0x000000;
+  int const TrainSlower = 0x000000;
+  int TrainRunSpeed = 100;
 //Spotlight Variable Setup
   int const SpotlightPin = 2; //Declare pin for LED on front, act as a spotlight
 //Remote Control Variable Setup
@@ -149,6 +153,7 @@ void loop() // put your main code here, to run repeatedly:
             delay(1000);
             analogWrite(MotorPin, TrainRunSpeed);
             break; //ends case statement if case 2 is run
+//            case: 
           default: //default action if neither case 1 nor case 2 happens
             break; //ends code if default code runs
         }
