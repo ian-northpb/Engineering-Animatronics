@@ -20,6 +20,7 @@
 //Motor Variable Setup
   int const MotorPin = A1; //Declare pin slot for motor
   int const TrainRunStop = 0;
+  int const TrainSpeedInterval = 10;
   int const TrainMaxSpeed = 125;
   int const TrainMinSpeed = 25;
   int const TrainFaster = 0xFFFFFF;
@@ -42,6 +43,7 @@
   int const ServoDefaultPos = 90; //Starting position of the servo
   int const ServoNicePourPos = 180; //Position to dump present
   int const ServoNaughtyPourPos = 0; //Position to dump coal
+  int const ServoDispenseInterval = 20; //Interval to adjust servo dispensing speed
   int ServoPos = 90;
 //LCD Variable Setup
   LiquidCrystal_I2C lcd(0x20, 16, 2); // set the LCD address to 0x20(Cooperate with 3 short circuit caps) for a 16 chars and 2 line display
@@ -66,7 +68,6 @@ void setup() // put your setup code here, to run once:
 //Servo Setup
   PresentServo.attach(PresentServoPin); //Assigns pin for the Servo
   PresentServo.write(ServoDefaultPos); //Sets servo to starting position
-
 }
 void loop() // put your main code here, to run repeatedly:
 {
@@ -115,7 +116,7 @@ void loop() // put your main code here, to run repeatedly:
             {
 /*Fix this*///analogWrite(/*Name of servo or servo pin????*/PresentServoPin, ServoPos);
               PresentServo.write(ServoPos); //Moves servo to current servo position
-              delay(20); //moves servo at controlled speed
+              delay(ServoDispenseInterval); //moves servo at controlled speed
             }
             delay(1000);
 /* Fixed? */for (int ServoPos = ServoNaughtyPourPos; ServoPos > ServoDefaultPos; ServoPos = ServoPos - 1)
@@ -123,7 +124,7 @@ void loop() // put your main code here, to run repeatedly:
             {
 /*Fix this*///analogWrite(/*Name of servo or servo pin????*/PresentServoPin, ServoPos);
               PresentServo.write(ServoPos); //Moves servo to current servo position
-              delay(20);
+              delay(ServoDispenseInterval);
             }
             delay(1000);
             analogWrite(MotorPin, TrainRunSpeed);
@@ -140,7 +141,7 @@ void loop() // put your main code here, to run repeatedly:
             {
 /*Fix this*///analogWrite(/*Name of servo or servo pin????*/PresentServoPin, ServoPos);
               PresentServo.write(ServoPos); //Moves servo to current servo position
-              delay(20);
+              delay(ServoDispenseInterval);
             }
             delay(1000);
 /* Fixed? */for (int ServoPos = ServoNicePourPos; ServoPos < ServoDefaultPos; ServoPos = ServoPos + 1)
@@ -148,20 +149,20 @@ void loop() // put your main code here, to run repeatedly:
             {
 /*Fix this*///analogWrite(/*Name of servo or servo pin????*/PresentServoPin, ServoPos);
               PresentServo.write(ServoPos); //Moves servo to current servo position
-              delay(20);
+              delay(ServoDispenseInterval);
             }
             delay(1000);
             analogWrite(MotorPin, TrainRunSpeed);
             break; //ends case statement if case 2 is run
           case TrainFaster: //Press plus button to increase speed of train
-            int TrainRunSpeed = TrainRunSpeed + 10;
+            int TrainRunSpeed = TrainRunSpeed + TrainSpeedInterval;
             if(TrainRunSpeed > TrainMaxSpeed)
               {
               int TrainRunSpeed = TrainMaxSpeed;
               }
             break;
           case TrainSlower:
-            int TrainRunSpeed = TrainRunSpeed - 10;
+            int TrainRunSpeed = TrainRunSpeed - TrainSpeedInterval;
             if(TrainRunSpeed < TrainMinSpeed)
             {
               int TrainRunSpeed = TrainMinSpeed;
