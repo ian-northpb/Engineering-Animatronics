@@ -23,8 +23,8 @@
   int const TrainSpeedInterval = 10;
   int const TrainMaxSpeed = 125;
   int const TrainMinSpeed = 25;
-  int const TrainFaster = 0xFFFFFF;
-  int const TrainSlower = 0xF5FFFA;
+  int const TrainFaster = /*Not Correct Yet*/0xFFFFFF;
+  int const TrainSlower = /*Not Correct Yet*/0xF5FFFA;
   int TrainRunSpeed = 100;
 //Spotlight Variable Setup
   int const SpotlightPin = 2; //Declare pin for LED on front, act as a spotlight
