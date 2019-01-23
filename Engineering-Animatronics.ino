@@ -23,8 +23,8 @@
   int const TrainSpeedInterval = 10;
   int const TrainMaxSpeed = 125;
   int const TrainMinSpeed = 25;
-  int const TrainFaster = /*Not Correct Yet*/0xFFFFFF;
-  int const TrainSlower = /*Not Correct Yet*/0xF5FFFA;
+  unsigned long const TrainFaster = /*Not Correct Yet*/0xFFFFFF;
+  unsigned long const TrainSlower = /*Not Correct Yet*/0xF5FFFA;
   int TrainRunSpeed = 100;
 //Spotlight Variable Setup
   int const SpotlightPin = 2; //Declare pin for LED on front, act as a spotlight
@@ -154,20 +154,20 @@ void loop() // put your main code here, to run repeatedly:
             delay(1000);
             analogWrite(MotorPin, TrainRunSpeed);
             break; //ends case statement if case 2 is run
-          case TrainFaster: //Press plus button to increase speed of train
-            int TrainRunSpeed = TrainRunSpeed + TrainSpeedInterval;
-            if(TrainRunSpeed > TrainMaxSpeed)
-              {
-              int TrainRunSpeed = TrainMaxSpeed;
-              }
-            break;
-          case TrainSlower:
-            int TrainRunSpeed = TrainRunSpeed - TrainSpeedInterval;
-            if(TrainRunSpeed < TrainMinSpeed)
-            {
-              int TrainRunSpeed = TrainMinSpeed;
-            }
-            break;
+//          case TrainFaster: //Press plus button to increase speed of train
+//            int TrainRunSpeed = TrainRunSpeed + TrainSpeedInterval;
+//            if(TrainRunSpeed > TrainMaxSpeed)
+//              {
+//              int TrainRunSpeed = TrainMaxSpeed;
+//              }
+//            break;
+//          case TrainSlower:
+//            int TrainRunSpeed = TrainRunSpeed - TrainSpeedInterval;
+//            if(TrainRunSpeed < TrainMinSpeed)
+//            {
+//              int TrainRunSpeed = TrainMinSpeed;
+//            }
+//            break;
           default: //default action if neither case 1 nor case 2 happens
             break; //ends code if default code runs
         }
