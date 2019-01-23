@@ -6,7 +6,11 @@
                 "/Applications/Arduino.app/Contents/Java/tools/**",
                 "/Applications/Arduino.app/Contents/Java/hardware/arduino/avr/**",
                 "${workspaceFolder}/**",
-                "/Applications/Arduino.app/Contents/Java/libraries/Servo/src"
+                "/Applications/Arduino.app/Contents/Java/libraries/Servo/src",
+                "~/Documents/Arduino/libraries/IRremote",
+                "~/Documents/Arduino/libraries/LiquidCrystal_I2C",
+                "/Applications/Arduino.app/Contents/Java/Hardware/tools/avr/avr/include",
+                "/Applications/Arduino.app/Contents/Java/Hardware/tools/avr/lib/gcc/avr/5.4.0/include"
             ],
             "defines": [],
             "macFrameworkPath": [
