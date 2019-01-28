@@ -93,7 +93,7 @@ void loop() // put your main code here, to run repeatedly:
   while (FlameOn == true) //Runs while the flame is lit
   {
     //display Merry Christmas
-    /*if(irrecv.decode(&results)) //Not sure if necessary*************************************************/
+    /*if(irrecv.decode(&results)) {} //Not sure if necessary*************************************************/
     if (IRValue == PowerButtonHex) //Do if power button is pressed
     {
       bool TrainRun = !TrainRun; //Toggle train as on/off
