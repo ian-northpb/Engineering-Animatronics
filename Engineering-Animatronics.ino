@@ -18,7 +18,8 @@
   int FlameValue = 0; //Declare value of flame, later used to determine on or off
   bool FlameOn = false; //Declare flame on or off
 //Motor Variable Setup
-  int const MotorPin = A1; //Declare pin slot for motor
+  Servo MotorServo;
+  int const MotorPin = 8; //Declare pin slot for motor
   int const TrainRunStop = 0;
   int const TrainSpeedInterval = 10;
   int const TrainMaxSpeed = 125;
@@ -37,7 +38,7 @@
   unsigned long const NaughtyButtonHex = /*Not correct yet*/0xF0FFF0; //Hex Code for naughty button, button labeled
   IRrecv irrecv(IRremotePin);
   decode_results results;
-//Servo Variable Setup
+//Present Servo Variable Setup
   Servo PresentServo;
   int const PresentServoPin = 9; //Declare pin of servo controlling nice presents
   int const ServoDefaultPos = 90; //Starting position of the servo
@@ -58,7 +59,7 @@ void setup() // put your setup code here, to run once:
 //Remote Control Setup
   irrecv.enableIRIn();
 //Motor Setup
-  pinMode(MotorPin, OUTPUT); //Assigns Pin for the drive motor
+  MotorServo.attach(MotorPin); //Assigns the Motor to be controlled using servo controls
 //Front Spotlight Setup
   pinMode(SpotlightPin, OUTPUT); //Assigns pin for the LED Front light
 //LCD Screen Setup
@@ -105,7 +106,7 @@ void loop() // put your main code here, to run repeatedly:
         switch (IRValue) //Use the remote to run different codes
         {
           case NaughtyButtonHex: //Press __ button to run scenario
-            analogWrite(MotorPin, TrainRunStop);
+            MotorServo.write(TrainRunStop);
             lcd.clear(); //Laura used blink and noblink?
             lcd.setCursor(0, 0);
             lcd.print("Naughty");
@@ -127,7 +128,7 @@ void loop() // put your main code here, to run repeatedly:
               delay(ServoDispenseInterval);
             }
             delay(1000);
-            analogWrite(MotorPin, TrainRunSpeed);
+            MotorServo.write(TrainRunSpeed);
             break; //ends case statement if case 1 is run
           case NiceButtonHex: //Press __ button to run scenario
             lcd.clear(); //clears display and set cursor to 0,0
@@ -135,7 +136,7 @@ void loop() // put your main code here, to run repeatedly:
             lcd.print("Nice!!  Nice!!");
             lcd.setCursor(6, 1);
             lcd.print("Nice!!");
-            analogWrite(MotorPin, TrainRunStop);
+            MotorServo.write(TrainRunStop);
 /* Fixed? */for (int ServoPos = ServoDefaultPos; ServoPos > ServoNicePourPos; ServoPos = ServoPos - 1)
 ///*Fix this*/for (int ServoPos = ServoDefaultPos; ServoPos > ServoNicePourPos; ServoPos = ServoPos - 1)
             {
@@ -152,7 +153,7 @@ void loop() // put your main code here, to run repeatedly:
               delay(ServoDispenseInterval);
             }
             delay(1000);
-            analogWrite(MotorPin, TrainRunSpeed);
+            MotorServo.write(TrainRunSpeed);
             break; //ends case statement if case 2 is run
           case TrainFaster: //Press plus button to increase speed of train
             TrainRunSpeed =+ TrainSpeedInterval;
@@ -160,6 +161,7 @@ void loop() // put your main code here, to run repeatedly:
               {
               int TrainRunSpeed = TrainMaxSpeed;
               }
+            MotorServo.write(TrainRunSpeed);
             break;
           case TrainSlower:
             TrainRunSpeed =- TrainSpeedInterval;
@@ -167,6 +169,7 @@ void loop() // put your main code here, to run repeatedly:
             {
               int TrainRunSpeed = TrainMinSpeed;
             }
+          MotorServo.write(TrainRunSpeed);
             break;
           default: //default action if neither case 1 nor case 2 happens
             break; //ends code if default code runs
