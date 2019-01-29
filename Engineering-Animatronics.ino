@@ -1,11 +1,8 @@
 /*Animatronic Master Code Holiday Themed PreCode Testing*/
 
 /*To Do List
- * Make LCD Say Merry Christmas and Ho Ho Ho while not doign anythign
- * 
- * Fill out case statement, run servo, and display naughty/nice
- * 
- * figure out how to use Infared Remote and sensor
+ * Configure the correct values for the remote buttons
+ * Check variable identifiers in case statements. Arduino fails to compiled when some variables are identified.
  */
 //Included Libraries
   #include <SoftwareSerial.h> //Library to use serial monitor
@@ -131,7 +128,7 @@ void loop() // put your main code here, to run repeatedly:
             MotorServo.write(TrainRunSpeed);
             break; //ends case statement if case 1 is run
           case PowerButtonHex: //case for power button to turn off
-            bool TrainRun = !TrainRun; //Toggle train as on/off
+            TrainRun = !TrainRun; //Toggle train as on/off
             break; // ends case statement if power button case is run
           case NiceButtonHex: //Press __ button to run scenario
             lcd.clear(); //clears display and set cursor to 0,0
