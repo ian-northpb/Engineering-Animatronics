@@ -101,7 +101,7 @@ void loop() // put your main code here, to run repeatedly:
     while (TrainRun == true) //Do while train was turned "on" and the flame is lit
     {
       //Display Merry Christmas and HO HO HO, alternating and scrolling
-      if (irrecv.decode(&results))
+/*Necessary because of statement on line 80??*/      if (irrecv.decode(&results))
       {
         switch (IRValue) //Use the remote to run different codes
         {
@@ -130,6 +130,9 @@ void loop() // put your main code here, to run repeatedly:
             delay(1000);
             MotorServo.write(TrainRunSpeed);
             break; //ends case statement if case 1 is run
+          case PowerButtonHex: //case for power button to turn off
+            bool TrainRun = !TrainRun; //Toggle train as on/off
+            break; // ends case statement if power button case is run
           case NiceButtonHex: //Press __ button to run scenario
             lcd.clear(); //clears display and set cursor to 0,0
             lcd.setCursor(0, 0);
