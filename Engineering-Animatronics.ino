@@ -18,9 +18,9 @@
   Servo MotorServo;
   int const MotorPin = 8; //Declare pin slot for motor
   int const TrainRunStop = 0;
-  int const TrainSpeedInterval = 10;
-  int const TrainMaxSpeed = 125;
-  int const TrainMinSpeed = 25;
+  int const TrainSpeedInterval = 2;
+  int const TrainMaxSpeed = 125; //93 is mid
+  int const TrainMinSpeed = 25; // 58 is fastest forwards, 128 fastest backwards
   unsigned long const TrainFaster = /*Not Correct Yet*/0xFFFFFF;
   unsigned long const TrainSlower = /*Not Correct Yet*/0xF5FFFA;
   int TrainRunSpeed = 100;
