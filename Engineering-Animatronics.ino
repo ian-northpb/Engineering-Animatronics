@@ -18,9 +18,9 @@
   Servo MotorServo;
   int const MotorPin = 8; //Declare pin slot for motor
   int const TrainRunStop = 0;
-  int const TrainSpeedInterval = 2;
-  int const TrainMaxSpeed = 125; //93 is mid
-  int const TrainMinSpeed = 25; // 58 is fastest forwards, 128 fastest backwards
+  int const TrainSpeedInterval = 5;
+  int const TrainMaxSpeed = 58; //93 is mid
+  int const TrainMinSpeed = 85; // 58 is fastest forwards, 128 fastest backwards
   unsigned long const TrainFaster = /*Not Correct Yet*/0xFFFFFF;
   unsigned long const TrainSlower = /*Not Correct Yet*/0xF5FFFA;
   int TrainRunSpeed = 100;
@@ -95,10 +95,10 @@ void loop() // put your main code here, to run repeatedly:
     {
       bool TrainRun = !TrainRun; //Toggle train as on/off
     }
-    while (TrainRun == true) //Do while train was turned "on" and the flame is lit
+    while (TrainRun == true && FlameOn == true) //Do while train was turned "on" and the flame is lit
     {
       //Display Merry Christmas and HO HO HO, alternating and scrolling
-/*Necessary because of statement on line 80??*/      if (irrecv.decode(&results))
+/*Is this necessary because of statement on line 80??*/      if (irrecv.decode(&results))
       {
         switch (IRValue) //Use the remote to run different codes
         {
@@ -110,17 +110,13 @@ void loop() // put your main code here, to run repeatedly:
             lcd.setCursor(1, 9);
             lcd.print("Naughty");
 /* Fixed? */for (int ServoPos = ServoDefaultPos; ServoPos < ServoNaughtyPourPos; ServoPos = ServoPos + 1)
-///*Fix this*/for (int ServoPos = ServoDefaultPos; ServoPos < ServoNaughtyPourPos; ServoPos = ServoPos + 1)
             {
-/*Fix this*///analogWrite(/*Name of servo or servo pin????*/PresentServoPin, ServoPos);
               PresentServo.write(ServoPos); //Moves servo to current servo position
               delay(ServoDispenseInterval); //moves servo at controlled speed
             }
             delay(1000);
 /* Fixed? */for (int ServoPos = ServoNaughtyPourPos; ServoPos > ServoDefaultPos; ServoPos = ServoPos - 1)
-///*Fix this*/for (int ServoPos = ServoNaughtyPourPos; ServoPos > ServoDefaultPos; ServoPos = ServoPos - 1)
             {
-/*Fix this*///analogWrite(/*Name of servo or servo pin????*/PresentServoPin, ServoPos);
               PresentServo.write(ServoPos); //Moves servo to current servo position
               delay(ServoDispenseInterval);
             }
@@ -156,16 +152,16 @@ void loop() // put your main code here, to run repeatedly:
             MotorServo.write(TrainRunSpeed);
             break; //ends case statement if case 2 is run
           case TrainFaster: //Press plus button to increase speed of train
-            TrainRunSpeed =+ TrainSpeedInterval;
-            if(TrainRunSpeed > TrainMaxSpeed)
+            TrainRunSpeed =- TrainSpeedInterval;
+            if(TrainRunSpeed < TrainMaxSpeed)
               {
               int TrainRunSpeed = TrainMaxSpeed;
               }
             MotorServo.write(TrainRunSpeed);
             break;
           case TrainSlower:
-            TrainRunSpeed =- TrainSpeedInterval;
-            if(TrainRunSpeed < TrainMinSpeed)
+            TrainRunSpeed =+ TrainSpeedInterval;
+            if(TrainRunSpeed > TrainMinSpeed)
             {
               int TrainRunSpeed = TrainMinSpeed;
             }
