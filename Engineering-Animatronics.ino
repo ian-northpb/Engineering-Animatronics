@@ -11,18 +11,18 @@
   #include <LiquidCrystal_I2C.h> //Library used to setup and control the LCD Screen
 //Flame Sensor Variable Setup
   int const FlameSensorPin = A0; //Declare Flame Sensor Pin
-  int const FlameThreshold = 400; //Declare threshold for flame considered on
+  int const FlameThreshold = 20; //Declare threshold for flame considered on
   int FlameValue = 0; //Declare value of flame, later used to determine on or off
   bool FlameOn = false; //Declare flame on or off
 //Motor Variable Setup
   Servo MotorServo;
-  int const MotorPin = 8; //Declare pin slot for motor
+  int const MotorPin = 10; //Declare pin slot for motor
   int const TrainRunStop = 0;
   int const TrainSpeedInterval = 5;
   int const TrainMaxSpeed = 58; //93 is mid
   int const TrainMinSpeed = 85; // 58 is fastest forwards, 128 fastest backwards
-  unsigned long const TrainFaster = /*Not Correct Yet*/0xFFFFFF;
-  unsigned long const TrainSlower = /*Not Correct Yet*/0xF5FFFA;
+  unsigned long const TrainFaster = 0xFD609F;
+  unsigned long const TrainSlower = 0xFD20DF;
   int TrainRunSpeed = 100;
 //Spotlight Variable Setup
   int const SpotlightPin = 2; //Declare pin for LED on front, act as a spotlight
@@ -30,9 +30,9 @@
   int const IRremotePin = 11; //Declare pin for Infared Remote receiver
   unsigned long IRValue = 0x000000; //Need to learn how to use this!!!! Remote and Receiver
   bool TrainRun = false; //use on/off button on remote to toggle true and false
-  unsigned long const PowerButtonHex = /*Not correct yet*/ 0xFD00FF; //Hex Code for power button, button labled power
-  unsigned long const NiceButtonHex = /*Not correct yet*/ 0xFFFAFA; //Hex Code for nice button, button labeled
-  unsigned long const NaughtyButtonHex = /*Not correct yet*/0xF0FFF0; //Hex Code for naughty button, button labeled
+  unsigned long const PowerButtonHex = 0xFD00FF; //Hex Code for power button, button labled power
+  unsigned long const NiceButtonHex = 0xFFFAFA; //Hex Code for nice button, button labeled
+  unsigned long const NaughtyButtonHex = 0xFD906F; //Hex Code for naughty button, button labeled
   IRrecv irrecv(IRremotePin);
   decode_results results;
 //Present Servo Variable Setup
