@@ -11,7 +11,7 @@
   #include <LiquidCrystal_I2C.h> //Library used to setup and control the LCD Screen
 //Flame Sensor Variable Setup
   int const FlameSensorPin = A0; //Declare Flame Sensor Pin
-  int const FlameThreshold = 20; //Declare threshold for flame considered on
+  int const FlameThreshold = 600; //Declare threshold for flame considered on
   int FlameValue = 0; //Declare value of flame, later used to determine on or off
   bool FlameOn = false; //Declare flame on or off
 //Motor Variable Setup
@@ -21,18 +21,17 @@
   int const TrainSpeedInterval = 5;
   int const TrainMaxSpeed = 58; //93 is mid
   int const TrainMinSpeed = 85; // 58 is fastest forwards, 128 fastest backwards
-  unsigned long const TrainFaster = 0xFD609F;
-  unsigned long const TrainSlower = 0xFD20DF;
+  int const TrainFaster = 0xFD609F; // Fast Forward
+  int const TrainSlower = 0xFD20DF; // Rewind
   int TrainRunSpeed = 100;
 //Spotlight Variable Setup
   int const SpotlightPin = 2; //Declare pin for LED on front, act as a spotlight
 //Remote Control Variable Setup
   int const IRremotePin = 11; //Declare pin for Infared Remote receiver
-  unsigned long IRValue = 0x000000; //Need to learn how to use this!!!! Remote and Receiver
   bool TrainRun = false; //use on/off button on remote to toggle true and false
-  unsigned long const PowerButtonHex = 0xFD00FF; //Hex Code for power button, button labled power
-  unsigned long const NiceButtonHex = 0xFFFAFA; //Hex Code for nice button, button labeled
-  unsigned long const NaughtyButtonHex = 0xFD906F; //Hex Code for naughty button, button labeled
+  int const PowerButtonHex = 0xFD00FF; //Power Button //Hex Code for power button, button labled power
+  int const NiceButtonHex = 0xFFFAFA; // Vol + //Hex Code for nice button, button labeled
+  int const NaughtyButtonHex = 0xFD906F; // Vol - //Hex Code for naughty button, button labeled
   IRrecv irrecv(IRremotePin);
   decode_results results;
 //Present Servo Variable Setup
@@ -63,18 +62,18 @@ void setup() // put your setup code here, to run once:
   lcd.init(); // initialize the lcd
   lcd.backlight();
   lcd.home();
+
+  lcd.setCursor(4, 0);
+  lcd.print("Ho Ho Ho");
+  lcd.setCursor(1, 1);
+  lcd.print("Merry Christmas");
 //Servo Setup
   PresentServo.attach(PresentServoPin); //Assigns pin for the Servo
   PresentServo.write(ServoDefaultPos); //Sets servo to starting position
 }
 void loop() // put your main code here, to run repeatedly:
 {
-  lcd.setCursor(3, 0);
-  lcd.print("Ho Ho Ho");
-  lcd.setCursor(0, 1);
-  lcd.print("Merry Christmas");
   int FlameValue = analogRead(FlameSensorPin); //Equates variable "FlameValue" to the data read by flame sensor
-  unsigned long IRValue = irrecv.decode(&results);
 //Turn on flame if higher than threshold
   if (FlameValue > FlameThreshold) //Do if the flame value is greater than its threshold
   {
@@ -91,23 +90,24 @@ void loop() // put your main code here, to run repeatedly:
   {
     //display Merry Christmas
     /*if(irrecv.decode(&results)) {} //Not sure if necessary*************************************************/
-    if (IRValue == PowerButtonHex) //Do if power button is pressed
+    if (results.value == PowerButtonHex) //Do if power button is pressed
     {
       bool TrainRun = !TrainRun; //Toggle train as on/off
     }
     while (TrainRun == true && FlameOn == true) //Do while train was turned "on" and the flame is lit
     {
       //Display Merry Christmas and HO HO HO, alternating and scrolling
-/*Is this necessary because of statement on line 80??*/      if (irrecv.decode(&results))
+      if(irrecv.decode(&results))
       {
-        switch (IRValue) //Use the remote to run different codes
-        {
-          case NaughtyButtonHex: //Press __ button to run scenario
+        Serial.println(results.value, HEX);
+        
+          if(results.value == NaughtyButtonHex) //Press __ button to run scenario
+          {
             MotorServo.write(TrainRunStop);
             lcd.clear(); //Laura used blink and noblink?
             lcd.setCursor(0, 0);
             lcd.print("Naughty");
-            lcd.setCursor(1, 9);
+            lcd.setCursor(9, 1);
             lcd.print("Naughty");
 /* Fixed? */for (int ServoPos = ServoDefaultPos; ServoPos < ServoNaughtyPourPos; ServoPos = ServoPos + 1)
             {
@@ -122,11 +122,13 @@ void loop() // put your main code here, to run repeatedly:
             }
             delay(1000);
             MotorServo.write(TrainRunSpeed);
-            break; //ends case statement if case 1 is run
-          case PowerButtonHex: //case for power button to turn off
+          }
+          else if(results.value == PowerButtonHex) //case for power button to turn off
+          {
             TrainRun = !TrainRun; //Toggle train as on/off
-            break; // ends case statement if power button case is run
-          case NiceButtonHex: //Press __ button to run scenario
+          }
+          else if(results.value == NiceButtonHex) //Press __ button to run scenario
+          {
             lcd.clear(); //clears display and set cursor to 0,0
             lcd.setCursor(0, 0);
             lcd.print("Nice!!  Nice!!");
@@ -150,26 +152,25 @@ void loop() // put your main code here, to run repeatedly:
             }
             delay(1000);
             MotorServo.write(TrainRunSpeed);
-            break; //ends case statement if case 2 is run
-          case TrainFaster: //Press plus button to increase speed of train
+          }
+          else if(results.value == TrainFaster) //Press plus button to increase speed of train
+          {
             TrainRunSpeed =- TrainSpeedInterval;
             if(TrainRunSpeed < TrainMaxSpeed)
               {
               int TrainRunSpeed = TrainMaxSpeed;
               }
             MotorServo.write(TrainRunSpeed);
-            break;
-          case TrainSlower:
+          }
+          else if(results.value == TrainSlower)
+          {
             TrainRunSpeed =+ TrainSpeedInterval;
             if(TrainRunSpeed > TrainMinSpeed)
             {
               int TrainRunSpeed = TrainMinSpeed;
             }
-          MotorServo.write(TrainRunSpeed);
-            break;
-          default: //default action if neither case 1 nor case 2 happens
-            break; //ends code if default code runs
-        }
+            MotorServo.write(TrainRunSpeed);
+          }
         irrecv.resume();
       }
     }
