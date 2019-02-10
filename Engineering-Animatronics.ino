@@ -68,6 +68,7 @@ void setup() // put your setup code here, to run once:
   PresentServo.attach(PresentServoPin); //Assigns pin for the Servo
   PresentServo.write(ServoDefaultPos); //Sets servo to starting position
 }
+
 void loop() // put your main code here, to run repeatedly:
 {
   int FlameValue = analogRead(FlameSensorPin); //Equates variable "FlameValue" to the data read by flame sensor
