@@ -26,7 +26,7 @@ int const SpotlightPin = 2; //Declare pin for LED on front, act as a spotlight
 int const IRremotePin = 11; //Declare pin for Infared Remote receiver
 bool TrainRun = false; //use on/off button on remote to toggle true and false
 //int const PowerButtonHex = 0xFD00FF; //Power Button //Hex Code for power button, button labled power
-//int const NiceButtonHex = 0xFFFAFA; // Vol + //Hex Code for nice button, button labeled
+//int const NiceButtonHex = 0xFD807F; // Vol + //Hex Code for nice button, button labeled
 //int const NaughtyButtonHex = 0xFD906F; // Vol - //Hex Code for naughty button, button labeled
 IRrecv irrecv(IRremotePin);
 decode_results results;
@@ -58,7 +58,7 @@ void setup() // put your setup code here, to run once:
   lcd.init(); // initialize the lcd
   lcd.backlight();
   lcd.home();
-
+//Check the rows and columns
   lcd.setCursor(4, 0);
   lcd.print("Ho Ho Ho");
   lcd.setCursor(1, 1);
@@ -79,6 +79,7 @@ void loop() // put your main code here, to run repeatedly:
     Serial.println("Flame is lit and flame value is above threshold");
     digitalWrite(SpotlightPin, HIGH); //Turn on the spotlight while flame is lit
     Serial.println("LED should be on");
+    delay(100);
   }
   else //Do if the flame value is less than its threshold
   {
@@ -86,11 +87,12 @@ void loop() // put your main code here, to run repeatedly:
     Serial.println("The flame should not be lit");
     digitalWrite(SpotlightPin, LOW); //Turn off the spotlight while flame is lit
     Serial.println("The spotlight should be off");
+    delay(100);
   }
-
+//add serial print commands within each loop to check 
   while (FlameOn == true) //Runs while the flame is lit
   {
-    if(irrecv.decode(&results))
+    if (irrecv.decode(&results))
     {
       if (results.value == 0xFD00FF) //Do if power button is pressed
       {
@@ -98,86 +100,96 @@ void loop() // put your main code here, to run repeatedly:
       }
     }
     irrecv.resume();
-      while (TrainRun == true && FlameOn == true) //Do while train was turned "on" and the flame is lit
+    while (TrainRun == true && FlameOn == true) //Do while train was turned "on" and the flame is lit
+    {
+      //Display Merry Christmas and HO HO HO, alternating and scrolling
+      if (irrecv.decode(&results))
       {
-        //Display Merry Christmas and HO HO HO, alternating and scrolling
-        if (irrecv.decode(&results))
-        {
-          Serial.println(results.value, HEX);
+        Serial.println(results.value, HEX);
 
-          if (results.value == 0xFD906F) //Press volume down button to run scenario
+        if (results.value == 0xFD906F) //Press volume down button to run scenario
+        {
+          Serial.println("Volume Down button pressed");
+          MotorServo.write(TrainRunStop);
+          lcd.clear(); //Laura used blink and noblink?
+          lcd.setCursor(0, 0);
+          lcd.print("Naughty");
+          lcd.setCursor(9, 1);
+          lcd.print("Naughty");
+          for (int ServoPos = ServoDefaultPos; ServoPos < ServoNaughtyPourPos; ServoPos = ServoPos + 1)
           {
-            Serial.println("Volume Down button pressed");
-            MotorServo.write(TrainRunStop);
-            lcd.clear(); //Laura used blink and noblink?
-            lcd.setCursor(0, 0);
-            lcd.print("Naughty");
-            lcd.setCursor(9, 1);
-            lcd.print("Naughty");
-            for (int ServoPos = ServoDefaultPos; ServoPos < ServoNaughtyPourPos; ServoPos = ServoPos + 1)
-            {
-              PresentServo.write(ServoPos); //Moves servo to current servo position
-              delay(ServoDispenseInterval); //moves servo at controlled speed
-            }
-            delay(1000);
-            for (int ServoPos = ServoNaughtyPourPos; ServoPos > ServoDefaultPos; ServoPos = ServoPos - 1)
-            {
-              PresentServo.write(ServoPos); //Moves servo to current servo position
-              delay(ServoDispenseInterval);
-            }
-            delay(1000);
-            MotorServo.write(TrainRunSpeed);
+            PresentServo.write(ServoPos); //Moves servo to current servo position
+            delay(ServoDispenseInterval); //moves servo at controlled speed
           }
-          else if (results.value == 0xFD00FF) //case for power button to turn off
+          delay(1000);
+          for (int ServoPos = ServoNaughtyPourPos; ServoPos > ServoDefaultPos; ServoPos = ServoPos - 1)
           {
-            Serial.println("Power Button is pressed to turn off train");
-            TrainRun = !TrainRun; //Toggle train as on/off
+            PresentServo.write(ServoPos); //Moves servo to current servo position
+            delay(ServoDispenseInterval);
           }
-          else if (results.value == 0xFFFAFA) //Press Volume Up button to run scenario
-          {
-            Serial.println("Volume up pressed to dispense present");
-            lcd.clear(); //clears display and set cursor to 0,0
-            lcd.setCursor(0, 0);
-            lcd.print("Nice!!  Nice!!");
-            lcd.setCursor(6, 1);
-            lcd.print("Nice!!");
-            MotorServo.write(TrainRunStop);
-            for (int ServoPos = ServoDefaultPos; ServoPos > ServoNicePourPos; ServoPos = ServoPos - 1)
-            {
-              PresentServo.write(ServoPos); //Moves servo to current servo position
-              delay(ServoDispenseInterval);
-            }
-            delay(1000);
-            for (int ServoPos = ServoNicePourPos; ServoPos < ServoDefaultPos; ServoPos = ServoPos + 1)
-            {
-              PresentServo.write(ServoPos); //Moves servo to current servo position
-              delay(ServoDispenseInterval);
-            }
-            delay(1000);
-            MotorServo.write(TrainRunSpeed);
-          }
-          else if (results.value == 0xFD609F) //Press Fast Forward button to increase speed of train
-          {
-            Serial.println("FF button pressed, and train increases speed");
-            int TrainRunSpeed = - TrainSpeedInterval;
-            if (TrainRunSpeed < TrainMaxSpeed)
-            {
-              int TrainRunSpeed = TrainMaxSpeed;
-            }
-            MotorServo.write(TrainRunSpeed);
-          }
-          else if (results.value == 0xFD20DF)
-          {
-            Serial.println("Rewind button pressed, and train decreases speed");
-            TrainRunSpeed = + TrainSpeedInterval;
-            if (TrainRunSpeed > TrainMinSpeed)
-            {
-              int TrainRunSpeed = TrainMinSpeed;
-            }
-            MotorServo.write(TrainRunSpeed);
-          }
-          irrecv.resume();
+          delay(1000);
+          MotorServo.write(TrainRunSpeed);
+          lcd.clear();
+          lcd.setCursor(4, 0);
+          lcd.print("Ho Ho Ho");
+          lcd.setCursor(1, 1);
+          lcd.print("Merry Christmas");
         }
+        else if (results.value == 0xFD00FF) //case for power button to turn off
+        {
+          Serial.println("Power Button is pressed to turn off train");
+          TrainRun = !TrainRun; //Toggle train as on/off
+        }
+        else if (results.value == 0xFFFAFA) //Press Volume Up button to run scenario
+        {
+          Serial.println("Volume up pressed to dispense present");
+          lcd.clear(); //clears display and set cursor to 0,0
+          lcd.setCursor(0, 0);
+          lcd.print("Nice!!  Nice!!");
+          lcd.setCursor(6, 1);
+          lcd.print("Nice!!");
+          MotorServo.write(TrainRunStop);
+          for (int ServoPos = ServoDefaultPos; ServoPos > ServoNicePourPos; ServoPos = ServoPos - 1)
+          {
+            PresentServo.write(ServoPos); //Moves servo to current servo position
+            delay(ServoDispenseInterval);
+          }
+          delay(1000);
+          for (int ServoPos = ServoNicePourPos; ServoPos < ServoDefaultPos; ServoPos = ServoPos + 1)
+          {
+            PresentServo.write(ServoPos); //Moves servo to current servo position
+            delay(ServoDispenseInterval);
+          }
+          delay(1000);
+          MotorServo.write(TrainRunSpeed);
+          lcd.clear();
+          lcd.setCursor(4, 0);
+          lcd.print("Ho Ho Ho");
+          lcd.setCursor(1, 1);
+          lcd.print("Merry Christmas");
+        }
+        else if (results.value == 0xFD609F) //Press Fast Forward button to increase speed of train
+        {
+          Serial.println("FF button pressed, and train increases speed");
+          int TrainRunSpeed = - TrainSpeedInterval;
+          if (TrainRunSpeed < TrainMaxSpeed)
+          {
+            int TrainRunSpeed = TrainMaxSpeed;
+          }
+          MotorServo.write(TrainRunSpeed);
+        }
+        else if (results.value == 0xFD20DF)
+        {
+          Serial.println("Rewind button pressed, and train decreases speed");
+          TrainRunSpeed = + TrainSpeedInterval;
+          if (TrainRunSpeed > TrainMinSpeed)
+          {
+            int TrainRunSpeed = TrainMinSpeed;
+          }
+          MotorServo.write(TrainRunSpeed);
+        }
+        irrecv.resume();
       }
+    }
   }
 }
