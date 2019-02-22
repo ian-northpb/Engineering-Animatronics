@@ -1,13 +1,13 @@
 /*Animatronic Master Code Holiday Themed PreCode Testing*/
 
 //Included Libraries
-#include <SoftwareSerial.h> //Library to use serial monitor
+#include <SoftwareSerial.h> //Library to use Serial monitor
 #include <Servo.h> //Library to use and control Servos
 #include <IRremote.h> //Library to use and control infrared
 #include <LiquidCrystal_I2C.h> //Library used to setup and control the LCD Screen
 //Flame Sensor Variable Setup
 int const FlameSensorPin = A0; //Declare Flame Sensor Pin
-int const FlameThreshold = 600; //Declare threshold for flame considered on
+int const FlameThreshold = 2/*temp, no flame lit*//*600*/; //Declare threshold for flame considered on
 int FlameValue = 0; //Declare value of flame, later used to determine on or off
 bool FlameOn = false; //Declare flame on or off
 //Motor Variable Setup
@@ -17,7 +17,7 @@ int const TrainRunStop = 0;
 int const TrainSpeedInterval = 5;
 int const TrainMaxSpeed = 58; //93 is mid
 int const TrainMinSpeed = 85; // 58 is fastest forwards, 128 fastest backwards
-//int const TrainFaster = 0xFD609F; // Fast Forward
+//int const TrainFaster = 0xFD6097F; // Fast Forward
 //int const TrainSlower = 0xFD20DF; // Rewind
 int TrainRunSpeed = 100;
 //Spotlight Variable Setup
@@ -58,7 +58,7 @@ void setup() // put your setup code here, to run once:
   lcd.init(); // initialize the lcd
   lcd.backlight();
   lcd.home();
-//Check the rows and columns
+
   lcd.setCursor(4, 0);
   lcd.print("Ho Ho Ho");
   lcd.setCursor(1, 1);
@@ -75,33 +75,34 @@ void loop() // put your main code here, to run repeatedly:
   //Turn on flame if higher than threshold
   if (FlameValue > FlameThreshold) //Do if the flame value is greater than its threshold
   {
-    bool FlameOn = true; //Write FlameOn as true
-    Serial.println("Flame is lit and flame value is above threshold");
+    FlameOn = true; //Write FlameOn as true
     digitalWrite(SpotlightPin, HIGH); //Turn on the spotlight while flame is lit
-    Serial.println("LED should be on");
     delay(100);
   }
   else //Do if the flame value is less than its threshold
   {
-    bool FlameOn = false; //Write FlameOn as false
-    Serial.println("The flame should not be lit");
+    FlameOn = false; //Write FlameOn as false
     digitalWrite(SpotlightPin, LOW); //Turn off the spotlight while flame is lit
-    Serial.println("The spotlight should be off");
     delay(100);
   }
-//add serial print commands within each loop to check 
+  //add Serial print commands within each loop to check
   while (FlameOn == true) //Runs while the flame is lit
   {
+    delay(100);
+    Serial.println("Inside first loop");
     if (irrecv.decode(&results))
     {
+      Serial.println("inside second loop, ir received");
       if (results.value == 0xFD00FF) //Do if power button is pressed
       {
-        bool TrainRun = !TrainRun; //Toggle train as on/off
+        Serial.println("Powerbutton has been pressed and read");
+        TrainRun = !TrainRun; //Toggle train as on/off
       }
     }
     irrecv.resume();
     while (TrainRun == true && FlameOn == true) //Do while train was turned "on" and the flame is lit
     {
+      MotorServo.write(TrainRunSpeed);
       //Display Merry Christmas and HO HO HO, alternating and scrolling
       if (irrecv.decode(&results))
       {
@@ -139,8 +140,9 @@ void loop() // put your main code here, to run repeatedly:
         {
           Serial.println("Power Button is pressed to turn off train");
           TrainRun = !TrainRun; //Toggle train as on/off
+          MotorServo.write(TrainRunStop);
         }
-        else if (results.value == 0xFFFAFA) //Press Volume Up button to run scenario
+        else if (results.value == 0xFD807F) //Press Volume Up button to run scenario
         {
           Serial.println("Volume up pressed to dispense present");
           lcd.clear(); //clears display and set cursor to 0,0
@@ -171,12 +173,13 @@ void loop() // put your main code here, to run repeatedly:
         else if (results.value == 0xFD609F) //Press Fast Forward button to increase speed of train
         {
           Serial.println("FF button pressed, and train increases speed");
-          int TrainRunSpeed = - TrainSpeedInterval;
+          TrainRunSpeed = - TrainSpeedInterval;
           if (TrainRunSpeed < TrainMaxSpeed)
           {
-            int TrainRunSpeed = TrainMaxSpeed;
+            TrainRunSpeed = TrainMaxSpeed;
           }
           MotorServo.write(TrainRunSpeed);
+          Serial.println(TrainRunSpeed);
         }
         else if (results.value == 0xFD20DF)
         {
@@ -184,9 +187,10 @@ void loop() // put your main code here, to run repeatedly:
           TrainRunSpeed = + TrainSpeedInterval;
           if (TrainRunSpeed > TrainMinSpeed)
           {
-            int TrainRunSpeed = TrainMinSpeed;
+            TrainRunSpeed = TrainMinSpeed;
           }
           MotorServo.write(TrainRunSpeed);
+          Serial.println(TrainRunSpeed);
         }
         irrecv.resume();
       }
